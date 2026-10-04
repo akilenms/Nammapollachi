@@ -295,7 +295,10 @@ async function loadReports() {
 
 
     const reports = await response.json();
-
+alert(
+  "Reports received from database: " +
+  reports.length
+);
 
     reports.forEach(function(report) {
 

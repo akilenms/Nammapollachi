@@ -400,13 +400,20 @@ async function submitReport() {
 
     if (!response.ok) {
 
-      const errorText = await response.text();
+  const errorText = await response.text();
 
-      console.error(errorText);
+  console.error("Supabase error:", errorText);
 
-      throw new Error("Database error");
+  alert(
+    "Supabase Error:\n\n" +
+    errorText
+  );
 
-    }
+  submitButton.disabled = false;
+  submitButton.innerText = "புகாரை சமர்ப்பிக்கவும்";
+
+  return;
+}
 
 
     document.getElementById("reportId").innerText =

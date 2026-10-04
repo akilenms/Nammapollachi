@@ -432,16 +432,17 @@ async function submitReport() {
 
   catch (error) {
 
-    console.error(error);
+  console.error("Connection error:", error);
 
-    alert(
-      "புகாரை பதிவு செய்ய முடியவில்லை. தயவுசெய்து மீண்டும் முயற்சிக்கவும்."
-    );
+  alert(
+    "Connection Error:\n\n" +
+    error.message
+  );
 
-    submitButton.disabled = false;
-    submitButton.innerText = "புகாரை சமர்ப்பிக்கவும்";
+  submitButton.disabled = false;
+  submitButton.innerText = "புகாரை சமர்ப்பிக்கவும்";
 
-  }
+}
 
 }
 

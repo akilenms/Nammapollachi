@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Report a Problem | Namma Pollachi</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7f5;
+      color: #1f2937;
+    }
+
+    header {
+      background: #176b45;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: 35px auto;
+      padding: 0 18px;
+    }
+
+    .card {
+      background: white;
+      padding: 28px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      color: #176b45;
+    }
+
+    .intro {
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 22px;
+      margin-bottom: 8px;
+    }
+
+    select,
+    textarea,
+    input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    .location-button {
+      width: 100%;
+      padding: 14px;
+      border: 2px solid #176b45;
+      background: white;
+      color: #176b45;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #locationStatus {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #666;
+    }
+
+    .submit-button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 16px;
+      border: none;
+      background: #176b45;
+      color: white;
+      border-radius: 8px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .notice {
+      margin-top: 20px;
+      padding: 12px;
+      background: #f1f5f3;
+      border-radius: 7px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    #successMessage {
+      display: none;
+      text-align: center;
+      padding: 30px 10px;
+    }
+
+    #successMessage .tick {
+      font-size: 60px;
+    }
+
+    #successMessage h2 {
+      color: #176b45;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">
+    <strong>🌿 Namma Pollachi</strong>
+  </a>
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <div id="reportForm">
+
+      <h1>Report a Problem</h1>
+
+      <p class="intro">
+        Found a cleanliness problem in Pollachi?
+        Send us the location and a photo so the issue can be tracked.
+      </p>
+
+      <label for="issueType">
+        What is the problem?
+      </label>
+
+      <select id="issueType">
+        <option value="">Select an issue</option>
+        <option>Garbage dumped on road</option>
+        <option>Overflowing garbage bin</option>
+        <option>Garbage collection missed</option>
+        <option>Construction debris</option>
+        <option>Blocked / dirty drain</option>
+        <option>Other cleanliness issue</option>
+      </select>
+
+
+      <label for="photo">
+        Add a photo
+      </label>
+
+      <input
+        type="file"
+        id="photo"
+        accept="image/*"
+        capture="environment"
+      >
+
+
+      <label>
+        Location
+      </label>
+
+      <button
+        type="button"
+        class="location-button"
+        onclick="getLocation()"
+      >
+        📍 Use My Current Location
+      </button>
+
+      <div id="locationStatus">
+        Location not added yet.
+      </div>
+
+
+      <label for="description">
+        Description (optional)
+      </label>
+
+      <textarea
+        id="description"
+        placeholder="For example: Garbage has been lying here for three days..."
+      ></textarea>
+
+
+      <button
+        class="submit-button"
+        onclick="submitReport()"
+      >
+        Submit Report
+      </button>
+
+      <div class="notice">
+        This is currently a demonstration version.
+        Reports submitted here are not yet sent to Pollachi Municipality.
+      </div>
+
+    </div>
+
+
+    <div id="successMessage">
+
+      <div class="tick">✅</div>
+
+      <h2>Report Submitted</h2>
+
+      <p>
+        Thank you for helping keep Pollachi clean.
+      </p>
+
+      <p>
+        <strong>Demo Report ID:</strong>
+        <span id="reportId"></span>
+      </p>
+
+      <p>
+        In the full version, you will be able to track
+        the status of this report until it is resolved.
+      </p>
+
+      <br>
+
+      <a href="index.html">
+        ← Return to Home
+      </a>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<footer>
+  Namma Pollachi — Demo Version
+  <br><br>
+  Independent citizen initiative • Not an official Pollachi Municipality website
+</footer>
+
+
+<script>
+
+let latitude = null;
+let longitude = null;
+
+
+function getLocation() {
+
+  const status = document.getElementById("locationStatus");
+
+  if (!navigator.geolocation) {
+    status.innerHTML = "❌ Location is not supported by this device.";
+    return;
+  }
+
+  status.innerHTML = "📍 Detecting your location...";
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      latitude = position.coords.latitude;
+      longitude = position.coords.longitude;
+
+      status.innerHTML =
+        "✅ Location captured successfully.<br>" +
+        "Latitude: " + latitude.toFixed(5) +
+        "<br>Longitude: " + longitude.toFixed(5);
+
+    },
+
+    function() {
+
+      status.innerHTML =
+        "❌ Unable to get location. Please allow location access and try again.";
+
+    }
+
+  );
+
+}
+
+
+function submitReport() {
+
+  const issueType =
+    document.getElementById("issueType").value;
+
+  const photo =
+    document.getElementById("photo").files.length;
+
+  if (issueType === "") {
+    alert("Please select the type of problem.");
+    return;
+  }
+
+  if (photo === 0) {
+    alert("Please add a photo.");
+    return;
+  }
+
+  if (latitude === null || longitude === null) {
+    alert("Please add your location.");
+    return;
+  }
+
+
+  const randomNumber =
+    Math.floor(1000 + Math.random() * 9000);
+
+  document.getElementById("reportId").innerText =
+    "NP-" + randomNumber;
+
+
+  document.getElementById("reportForm").style.display =
+    "none";
+
+  document.getElementById("successMessage").style.display =
+    "block";
+
+}
+
+</script>
+
+</body>
+</html>

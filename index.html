@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Namma Pollachi</title>
+  <title>நம்ம பொள்ளாச்சி</title>
 
   <style>
     * {
@@ -43,9 +43,9 @@
     .hero p {
       font-size: 19px;
       color: #555;
-      max-width: 600px;
+      max-width: 650px;
       margin: 0 auto 30px;
-      line-height: 1.6;
+      line-height: 1.8;
     }
 
     .report-button {
@@ -109,11 +109,27 @@
       font-size: 38px;
     }
 
+    .step p {
+      line-height: 1.7;
+      color: #555;
+    }
+
     footer {
       text-align: center;
       padding: 30px 20px;
       color: #777;
       font-size: 14px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 50px 18px;
+      }
+
+      .hero h1 {
+        font-size: 34px;
+      }
     }
   </style>
 </head>
@@ -121,20 +137,21 @@
 <body>
 
   <header>
-    <h2>🌿 Namma Pollachi</h2>
+    <h2>🌿 நம்ம பொள்ளாச்சி</h2>
   </header>
 
   <section class="hero">
 
-    <h1>Keep Pollachi Clean.</h1>
+    <h1>நம்ம பொள்ளாச்சியை தூய்மையாக வைத்திருப்போம்.</h1>
 
     <p>
-      See garbage, overflowing waste, debris or another cleanliness issue?
-      Report it in seconds and help make Pollachi cleaner.
+      உங்கள் பகுதியில் குப்பை, நிரம்பி வழியும் குப்பைத்தொட்டி,
+      கட்டுமானக் கழிவுகள் அல்லது சுகாதாரம் தொடர்பான பிரச்சினை உள்ளதா?
+      புகைப்படம் மற்றும் இருப்பிடத்துடன் எளிதாக புகார் அளிக்கலாம்.
     </p>
 
     <a href="report.html" class="report-button">
-      📷 Report a Problem
+      📷 பிரச்சினையை புகாரளிக்க
     </a>
 
   </section>
@@ -143,54 +160,66 @@
 
     <div class="stat">
       <h2>126</h2>
-      <p>Reports</p>
+      <p>மொத்த புகார்கள்</p>
     </div>
 
     <div class="stat">
       <h2>84</h2>
-      <p>Resolved</p>
+      <p>தீர்வு காணப்பட்டவை</p>
     </div>
 
     <div class="stat">
       <h2>27</h2>
-      <p>In Progress</p>
+      <p>நடவடிக்கையில்</p>
     </div>
 
     <div class="stat">
       <h2>15</h2>
-      <p>New</p>
+      <p>புதிய புகார்கள்</p>
     </div>
 
   </section>
 
   <section class="how-it-works">
 
-    <h2>How it works</h2>
+    <h2>இது எப்படி செயல்படும்?</h2>
 
     <div class="steps">
 
       <div class="step">
         <div class="icon">📷</div>
-        <h3>1. Take a Photo</h3>
-        <p>See a civic cleanliness problem? Take a photo.</p>
+        <h3>1. புகைப்படம் எடுக்கவும்</h3>
+        <p>
+          சுகாதாரம் தொடர்பான பிரச்சினையை கண்டால்
+          ஒரு புகைப்படம் எடுக்கவும்.
+        </p>
       </div>
 
       <div class="step">
         <div class="icon">📍</div>
-        <h3>2. Share Location</h3>
-        <p>Your location helps identify exactly where the problem is.</p>
+        <h3>2. இருப்பிடத்தை பகிரவும்</h3>
+        <p>
+          பிரச்சினை உள்ள இடத்தை துல்லியமாக கண்டறிய
+          உங்கள் இருப்பிடத்தை பகிரவும்.
+        </p>
       </div>
 
       <div class="step">
         <div class="icon">📢</div>
-        <h3>3. Report</h3>
-        <p>Submit the issue so it can be tracked publicly.</p>
+        <h3>3. புகாரளிக்கவும்</h3>
+        <p>
+          பிரச்சினையின் விவரங்களை சமர்ப்பித்து
+          அதனை பதிவு செய்யவும்.
+        </p>
       </div>
 
       <div class="step">
         <div class="icon">✅</div>
-        <h3>4. Resolve</h3>
-        <p>Track the issue until it has been resolved.</p>
+        <h3>4. தீர்வை கண்காணிக்கவும்</h3>
+        <p>
+          புகார் பதிவு செய்யப்பட்டதிலிருந்து
+          தீர்வு காணப்படும் வரை அதன் நிலையை அறியலாம்.
+        </p>
       </div>
 
     </div>
@@ -198,9 +227,10 @@
   </section>
 
   <footer>
-    Namma Pollachi — A citizen civic initiative
+    நம்ம பொள்ளாச்சி — பொதுமக்கள் நலனுக்கான குடிமக்கள் முயற்சி
     <br><br>
-    Demo version • Not an official Pollachi Municipality website
+    இது ஒரு மாதிரி இணையதளம் மட்டுமே.
+    பொள்ளாச்சி நகராட்சியின் அதிகாரப்பூர்வ இணையதளம் அல்ல.
   </footer>
 
 </body>

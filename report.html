@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ta">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Report a Problem | Namma Pollachi</title>
+  <title>புகார் அளிக்க | நம்ம பொள்ளாச்சி</title>
 
   <style>
     * {
@@ -49,7 +49,7 @@
 
     .intro {
       color: #555;
-      line-height: 1.5;
+      line-height: 1.8;
       margin-bottom: 28px;
     }
 
@@ -91,6 +91,7 @@
       margin-top: 10px;
       font-size: 14px;
       color: #666;
+      line-height: 1.6;
     }
 
     .submit-button {
@@ -108,17 +109,19 @@
 
     .notice {
       margin-top: 20px;
-      padding: 12px;
+      padding: 14px;
       background: #f1f5f3;
       border-radius: 7px;
       font-size: 13px;
       color: #555;
+      line-height: 1.7;
     }
 
     #successMessage {
       display: none;
       text-align: center;
       padding: 30px 10px;
+      line-height: 1.8;
     }
 
     #successMessage .tick {
@@ -129,11 +132,17 @@
       color: #176b45;
     }
 
+    #successMessage a {
+      color: #176b45;
+      font-weight: bold;
+    }
+
     footer {
       text-align: center;
       padding: 30px;
       font-size: 13px;
       color: #777;
+      line-height: 1.8;
     }
   </style>
 </head>
@@ -142,7 +151,7 @@
 
 <header>
   <a href="index.html">
-    <strong>🌿 Namma Pollachi</strong>
+    <strong>🌿 நம்ம பொள்ளாச்சி</strong>
   </a>
 </header>
 
@@ -152,30 +161,31 @@
 
     <div id="reportForm">
 
-      <h1>Report a Problem</h1>
+      <h1>பிரச்சினையை புகாரளிக்க</h1>
 
       <p class="intro">
-        Found a cleanliness problem in Pollachi?
-        Send us the location and a photo so the issue can be tracked.
+        பொள்ளாச்சியில் சுகாதாரம் தொடர்பான பிரச்சினையை கண்டீர்களா?
+        புகைப்படம் மற்றும் இருப்பிடத்தை பகிர்ந்து
+        பிரச்சினையை பதிவு செய்யுங்கள்.
       </p>
 
       <label for="issueType">
-        What is the problem?
+        என்ன பிரச்சினை?
       </label>
 
       <select id="issueType">
-        <option value="">Select an issue</option>
-        <option>Garbage dumped on road</option>
-        <option>Overflowing garbage bin</option>
-        <option>Garbage collection missed</option>
-        <option>Construction debris</option>
-        <option>Blocked / dirty drain</option>
-        <option>Other cleanliness issue</option>
+        <option value="">பிரச்சினையை தேர்வு செய்யவும்</option>
+        <option>சாலையில் கொட்டப்பட்ட குப்பை</option>
+        <option>நிரம்பி வழியும் குப்பைத்தொட்டி</option>
+        <option>குப்பை சேகரிக்கப்படவில்லை</option>
+        <option>கட்டுமானக் கழிவுகள்</option>
+        <option>அடைப்பு / அசுத்தமான வடிகால்</option>
+        <option>மற்ற சுகாதார பிரச்சினை</option>
       </select>
 
 
       <label for="photo">
-        Add a photo
+        புகைப்படம் சேர்க்கவும்
       </label>
 
       <input
@@ -187,7 +197,7 @@
 
 
       <label>
-        Location
+        இருப்பிடம்
       </label>
 
       <button
@@ -195,21 +205,21 @@
         class="location-button"
         onclick="getLocation()"
       >
-        📍 Use My Current Location
+        📍 எனது தற்போதைய இருப்பிடத்தை பயன்படுத்தவும்
       </button>
 
       <div id="locationStatus">
-        Location not added yet.
+        இருப்பிடம் இன்னும் சேர்க்கப்படவில்லை.
       </div>
 
 
       <label for="description">
-        Description (optional)
+        கூடுதல் விவரம் (விருப்பத்திற்குரியது)
       </label>
 
       <textarea
         id="description"
-        placeholder="For example: Garbage has been lying here for three days..."
+        placeholder="உதாரணம்: இந்த இடத்தில் மூன்று நாட்களாக குப்பை அகற்றப்படவில்லை..."
       ></textarea>
 
 
@@ -217,12 +227,13 @@
         class="submit-button"
         onclick="submitReport()"
       >
-        Submit Report
+        புகாரை சமர்ப்பிக்கவும்
       </button>
 
       <div class="notice">
-        This is currently a demonstration version.
-        Reports submitted here are not yet sent to Pollachi Municipality.
+        ℹ️ இது தற்போது ஒரு மாதிரி இணையதளம் மட்டுமே.
+        இங்கு சமர்ப்பிக்கப்படும் புகார்கள் இன்னும்
+        பொள்ளாச்சி நகராட்சிக்கு அனுப்பப்படுவதில்லை.
       </div>
 
     </div>
@@ -232,26 +243,27 @@
 
       <div class="tick">✅</div>
 
-      <h2>Report Submitted</h2>
+      <h2>புகார் பதிவு செய்யப்பட்டது</h2>
 
       <p>
-        Thank you for helping keep Pollachi clean.
+        நம்ம பொள்ளாச்சியை தூய்மையாக வைத்திருக்க
+        உதவியதற்கு நன்றி.
       </p>
 
       <p>
-        <strong>Demo Report ID:</strong>
+        <strong>மாதிரி புகார் எண்:</strong>
         <span id="reportId"></span>
       </p>
 
       <p>
-        In the full version, you will be able to track
-        the status of this report until it is resolved.
+        முழுமையான பதிப்பில், இந்த புகாரின் நிலையை
+        தீர்வு காணப்படும் வரை நீங்கள் கண்காணிக்க முடியும்.
       </p>
 
       <br>
 
       <a href="index.html">
-        ← Return to Home
+        ← முகப்பு பக்கத்திற்கு செல்லவும்
       </a>
 
     </div>
@@ -262,9 +274,10 @@
 
 
 <footer>
-  Namma Pollachi — Demo Version
+  நம்ம பொள்ளாச்சி — மாதிரி பதிப்பு
   <br><br>
-  Independent citizen initiative • Not an official Pollachi Municipality website
+  பொதுமக்கள் நலனுக்கான குடிமக்கள் முயற்சி •
+  பொள்ளாச்சி நகராட்சியின் அதிகாரப்பூர்வ இணையதளம் அல்ல
 </footer>
 
 
@@ -279,11 +292,13 @@ function getLocation() {
   const status = document.getElementById("locationStatus");
 
   if (!navigator.geolocation) {
-    status.innerHTML = "❌ Location is not supported by this device.";
+    status.innerHTML =
+      "❌ உங்கள் சாதனத்தில் இருப்பிட வசதி ஆதரிக்கப்படவில்லை.";
     return;
   }
 
-  status.innerHTML = "📍 Detecting your location...";
+  status.innerHTML =
+    "📍 உங்கள் இருப்பிடம் கண்டறியப்படுகிறது...";
 
   navigator.geolocation.getCurrentPosition(
 
@@ -293,16 +308,17 @@ function getLocation() {
       longitude = position.coords.longitude;
 
       status.innerHTML =
-        "✅ Location captured successfully.<br>" +
-        "Latitude: " + latitude.toFixed(5) +
-        "<br>Longitude: " + longitude.toFixed(5);
+        "✅ இருப்பிடம் வெற்றிகரமாக பதிவு செய்யப்பட்டது.<br>" +
+        "அட்சரேகை: " + latitude.toFixed(5) +
+        "<br>தீர்க்கரேகை: " + longitude.toFixed(5);
 
     },
 
     function() {
 
       status.innerHTML =
-        "❌ Unable to get location. Please allow location access and try again.";
+        "❌ இருப்பிடத்தை கண்டறிய முடியவில்லை. " +
+        "Location அனுமதியை வழங்கி மீண்டும் முயற்சிக்கவும்.";
 
     }
 
@@ -319,18 +335,21 @@ function submitReport() {
   const photo =
     document.getElementById("photo").files.length;
 
+
   if (issueType === "") {
-    alert("Please select the type of problem.");
+    alert("தயவுசெய்து பிரச்சினையின் வகையை தேர்வு செய்யவும்.");
     return;
   }
+
 
   if (photo === 0) {
-    alert("Please add a photo.");
+    alert("தயவுசெய்து ஒரு புகைப்படத்தை சேர்க்கவும்.");
     return;
   }
 
+
   if (latitude === null || longitude === null) {
-    alert("Please add your location.");
+    alert("தயவுசெய்து உங்கள் இருப்பிடத்தை சேர்க்கவும்.");
     return;
   }
 
@@ -338,12 +357,14 @@ function submitReport() {
   const randomNumber =
     Math.floor(1000 + Math.random() * 9000);
 
+
   document.getElementById("reportId").innerText =
     "NP-" + randomNumber;
 
 
   document.getElementById("reportForm").style.display =
     "none";
+
 
   document.getElementById("successMessage").style.display =
     "block";

@@ -168,10 +168,12 @@
   </div>
 
   <div class="demo-notice">
-    ⚠️ <strong>மாதிரி காட்சி:</strong>
-    இந்த வரைபடத்தில் தற்போது காட்டப்படும் புகார்கள்
-    விளக்கத்திற்காக உருவாக்கப்பட்ட மாதிரி தகவல்கள் மட்டுமே.
-    இவை உண்மையான பொதுமக்கள் புகார்கள் அல்ல.
+     ℹ️ <strong>சோதனை பதிப்பு:</strong>
+  இந்த இணையதளம் தற்போது சோதனை நிலையில் உள்ளது.
+  இங்கு காட்டப்படும் புகார்கள் பயனர்களால்
+  சோதனைக்காக பதிவு செய்யப்பட்டிருக்கலாம்.
+  இவை தற்போது பொள்ளாச்சி நகராட்சிக்கு
+  அதிகாரப்பூர்வமாக அனுப்பப்படுவதில்லை.
   </div>
 
   <div id="map"></div>
@@ -262,61 +264,130 @@
   const blueIcon = createIcon("#2980b9");
   const greenIcon = createIcon("#27ae60");
 
+async function loadReports() {
 
-  // DEMO REPORT 1
-  L.marker(
-    [10.6622, 77.0065],
-    {icon: orangeIcon}
-  )
-  .addTo(map)
-  .bindPopup(`
-    <strong>🗑️ சாலையில் கொட்டப்பட்ட குப்பை</strong>
-    <br><br>
-    நிலை:
-    <strong>புதிய புகார்</strong>
-    <br>
-    புகார் எண்: DEMO-001
-    <br><br>
-    <small>⚠️ மாதிரி தகவல்</small>
-  `);
+  try {
+
+    const response = await fetch(
+      SUPABASE_API_URL +
+      "/Reports?select=id,report_number,issue_type,description,latitude,longitude,status,created_at&order=created_at.desc",
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
 
 
-  // DEMO REPORT 2
-  L.marker(
-    [10.6577, 77.0018],
-    {icon: blueIcon}
-  )
-  .addTo(map)
-  .bindPopup(`
-    <strong>🚮 நிரம்பி வழியும் குப்பைத்தொட்டி</strong>
-    <br><br>
-    நிலை:
-    <strong>நடவடிக்கையில்</strong>
-    <br>
-    புகார் எண்: DEMO-002
-    <br><br>
-    <small>⚠️ மாதிரி தகவல்</small>
-  `);
+    if (!response.ok) {
+
+      const errorText = await response.text();
+
+      console.error(
+        "Supabase error:",
+        errorText
+      );
+
+      return;
+
+    }
 
 
-  // DEMO REPORT 3
-  L.marker(
-    [10.6650, 77.0100],
-    {icon: greenIcon}
-  )
-  .addTo(map)
-  .bindPopup(`
-    <strong>🧱 கட்டுமானக் கழிவுகள்</strong>
-    <br><br>
-    நிலை:
-    <strong>தீர்வு காணப்பட்டது</strong>
-    <br>
-    புகார் எண்: DEMO-003
-    <br><br>
-    <small>⚠️ மாதிரி தகவல்</small>
-  `);
+    const reports = await response.json();
 
+
+    reports.forEach(function(report) {
+
+      if (
+        report.latitude === null ||
+        report.longitude === null
+      ) {
+        return;
+      }
+
+
+      let icon = orangeIcon;
+
+
+      if (report.status === "நடவடிக்கையில்") {
+        icon = blueIcon;
+      }
+
+
+      if (report.status === "தீர்வு காணப்பட்டது") {
+        icon = greenIcon;
+      }
+
+
+      const description =
+        report.description
+          ? report.description
+          : "கூடுதல் விவரம் இல்லை";
+
+
+      L.marker(
+        [report.latitude, report.longitude],
+        { icon: icon }
+      )
+      .addTo(map)
+      .bindPopup(`
+        <strong>📍 ${escapeHtml(report.issue_type)}</strong>
+
+        <br><br>
+
+        <strong>புகார் எண்:</strong>
+        ${escapeHtml(report.report_number)}
+
+        <br>
+
+        <strong>நிலை:</strong>
+        ${escapeHtml(report.status)}
+
+        <br><br>
+
+        ${escapeHtml(description)}
+      `);
+
+    });
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Unable to load reports:",
+      error
+    );
+
+  }
+
+}
+
+
+function escapeHtml(value) {
+
+  const div =
+    document.createElement("div");
+
+  div.textContent =
+    value == null ? "" : String(value);
+
+  return div.innerHTML;
+
+}
+
+
+loadReports();
+  
 </script>
 
+const SUPABASE_API_URL =
+  "https://wseodcdxxhnhshmprwjv.supabase.co/rest/v1";
+
+const SUPABASE_KEY =
+  "sb_publishable_Vz4uj6Mw5m3e8FNu6hcqtQ_Vxn2FszZ";
+  
 </body>
 </html>

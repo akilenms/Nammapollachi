@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>புகார் வரைபடம் | நம்ம பொள்ளாச்சி</title>
+
+  <!-- Leaflet Map -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  >
+
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+  </script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f4f7f5;
+      color: #1f2937;
+    }
+
+    header {
+      background: #176b45;
+      color: white;
+      padding: 18px 20px;
+    }
+
+    header a {
+      color: white;
+      text-decoration: none;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 18px;
+    }
+
+    .title-area {
+      margin-bottom: 20px;
+    }
+
+    .title-area h1 {
+      color: #176b45;
+      margin-bottom: 8px;
+    }
+
+    .title-area p {
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .demo-notice {
+      background: #fff7d6;
+      border: 1px solid #ead88b;
+      padding: 14px;
+      border-radius: 8px;
+      margin-bottom: 18px;
+      line-height: 1.6;
+    }
+
+    #map {
+      height: 550px;
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+    }
+
+    .legend {
+      background: white;
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 10px;
+      display: flex;
+      gap: 25px;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+    }
+
+    .new {
+      background: #e67e22;
+    }
+
+    .progress {
+      background: #2980b9;
+    }
+
+    .resolved {
+      background: #27ae60;
+    }
+
+    .actions {
+      text-align: center;
+      padding: 30px 0 10px;
+    }
+
+    .button {
+      display: inline-block;
+      background: #176b45;
+      color: white;
+      text-decoration: none;
+      padding: 14px 22px;
+      border-radius: 8px;
+      font-weight: bold;
+      margin: 5px;
+    }
+
+    .secondary {
+      background: white;
+      color: #176b45;
+      border: 2px solid #176b45;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #777;
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    @media (max-width: 600px) {
+      #map {
+        height: 470px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <a href="index.html">
+    <strong>🌿 நம்ம பொள்ளாச்சி</strong>
+  </a>
+</header>
+
+<div class="container">
+
+  <div class="title-area">
+    <h1>🗺️ பொள்ளாச்சி புகார் வரைபடம்</h1>
+
+    <p>
+      பொள்ளாச்சியில் பதிவு செய்யப்பட்ட பிரச்சினைகள் மற்றும்
+      அவற்றின் தற்போதைய நிலையை இந்த வரைபடத்தில் காணலாம்.
+    </p>
+  </div>
+
+  <div class="demo-notice">
+    ⚠️ <strong>மாதிரி காட்சி:</strong>
+    இந்த வரைபடத்தில் தற்போது காட்டப்படும் புகார்கள்
+    விளக்கத்திற்காக உருவாக்கப்பட்ட மாதிரி தகவல்கள் மட்டுமே.
+    இவை உண்மையான பொதுமக்கள் புகார்கள் அல்ல.
+  </div>
+
+  <div id="map"></div>
+
+  <div class="legend">
+
+    <div class="legend-item">
+      <div class="dot new"></div>
+      புதிய புகார்
+    </div>
+
+    <div class="legend-item">
+      <div class="dot progress"></div>
+      நடவடிக்கையில்
+    </div>
+
+    <div class="legend-item">
+      <div class="dot resolved"></div>
+      தீர்வு காணப்பட்டது
+    </div>
+
+  </div>
+
+  <div class="actions">
+
+    <a href="report.html" class="button">
+      📷 புதிய புகார் அளிக்க
+    </a>
+
+    <a href="index.html" class="button secondary">
+      ← முகப்பு
+    </a>
+
+  </div>
+
+</div>
+
+<footer>
+  நம்ம பொள்ளாச்சி — மாதிரி பதிப்பு
+  <br><br>
+  பொதுமக்கள் நலனுக்கான குடிமக்கள் முயற்சி •
+  பொள்ளாச்சி நகராட்சியின் அதிகாரப்பூர்வ இணையதளம் அல்ல
+</footer>
+
+
+<script>
+
+  // Pollachi centre
+  const map = L.map("map").setView(
+    [10.6609, 77.0048],
+    14
+  );
+
+
+  // OpenStreetMap
+  L.tileLayer(
+    "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+    {
+      maxZoom: 19,
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }
+  ).addTo(map);
+
+
+  // Marker colours
+  function createIcon(color) {
+
+    return L.divIcon({
+      className: "",
+      html:
+        '<div style="' +
+        'background:' + color + ';' +
+        'width:22px;' +
+        'height:22px;' +
+        'border-radius:50%;' +
+        'border:3px solid white;' +
+        'box-shadow:0 1px 5px rgba(0,0,0,.5);' +
+        '"></div>',
+      iconSize: [22,22],
+      iconAnchor: [11,11]
+    });
+
+  }
+
+
+  const orangeIcon = createIcon("#e67e22");
+  const blueIcon = createIcon("#2980b9");
+  const greenIcon = createIcon("#27ae60");
+
+
+  // DEMO REPORT 1
+  L.marker(
+    [10.6622, 77.0065],
+    {icon: orangeIcon}
+  )
+  .addTo(map)
+  .bindPopup(`
+    <strong>🗑️ சாலையில் கொட்டப்பட்ட குப்பை</strong>
+    <br><br>
+    நிலை:
+    <strong>புதிய புகார்</strong>
+    <br>
+    புகார் எண்: DEMO-001
+    <br><br>
+    <small>⚠️ மாதிரி தகவல்</small>
+  `);
+
+
+  // DEMO REPORT 2
+  L.marker(
+    [10.6577, 77.0018],
+    {icon: blueIcon}
+  )
+  .addTo(map)
+  .bindPopup(`
+    <strong>🚮 நிரம்பி வழியும் குப்பைத்தொட்டி</strong>
+    <br><br>
+    நிலை:
+    <strong>நடவடிக்கையில்</strong>
+    <br>
+    புகார் எண்: DEMO-002
+    <br><br>
+    <small>⚠️ மாதிரி தகவல்</small>
+  `);
+
+
+  // DEMO REPORT 3
+  L.marker(
+    [10.6650, 77.0100],
+    {icon: greenIcon}
+  )
+  .addTo(map)
+  .bindPopup(`
+    <strong>🧱 கட்டுமானக் கழிவுகள்</strong>
+    <br><br>
+    நிலை:
+    <strong>தீர்வு காணப்பட்டது</strong>
+    <br>
+    புகார் எண்: DEMO-003
+    <br><br>
+    <small>⚠️ மாதிரி தகவல்</small>
+  `);
+
+</script>
+
+</body>
+</html>

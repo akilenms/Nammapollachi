@@ -333,8 +333,8 @@ async function submitReport() {
   const issueType =
     document.getElementById("issueType").value;
 
-  const photo =
-    document.getElementById("photo").files.length;
+  const photoInput =
+    document.getElementById("photo");
 
   const description =
     document.getElementById("description").value;
@@ -346,7 +346,7 @@ async function submitReport() {
   }
 
 
-  if (photo === 0) {
+  if (photoInput.files.length === 0) {
     alert("தயவுசெய்து ஒரு புகைப்படத்தை சேர்க்கவும்.");
     return;
   }
@@ -354,6 +354,18 @@ async function submitReport() {
 
   if (latitude === null || longitude === null) {
     alert("தயவுசெய்து உங்கள் இருப்பிடத்தை சேர்க்கவும்.");
+    return;
+  }
+
+
+  const photoFile = photoInput.files[0];
+
+
+  // Maximum photo size: 5 MB
+  if (photoFile.size > 5 * 1024 * 1024) {
+    alert(
+      "புகைப்படத்தின் அளவு 5 MB-க்கு குறைவாக இருக்க வேண்டும்."
+    );
     return;
   }
 
@@ -369,10 +381,100 @@ async function submitReport() {
     document.querySelector(".submit-button");
 
   submitButton.disabled = true;
-  submitButton.innerText = "புகார் பதிவு செய்யப்படுகிறது...";
+  submitButton.innerText =
+    "புகார் பதிவு செய்யப்படுகிறது...";
 
 
   try {
+
+    /*
+      STEP 1
+      Create a unique filename for the photograph.
+    */
+
+    let extension = "jpg";
+
+    if (photoFile.name.includes(".")) {
+      extension =
+        photoFile.name.split(".").pop().toLowerCase();
+    }
+
+
+    const photoName =
+      reportNumber +
+      "-" +
+      Date.now() +
+      "." +
+      extension;
+
+
+    /*
+      STEP 2
+      Upload photograph to Supabase Storage.
+    */
+
+    const projectBaseUrl =
+  SUPABASE_URL.replace("/rest/v1", "");
+
+const uploadResponse = await fetch(
+  projectBaseUrl +
+  "/storage/v1/object/report-photos/" +
+      encodeURIComponent(photoName),
+      {
+        method: "POST",
+
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + SUPABASE_KEY,
+          "Content-Type": photoFile.type,
+          "x-upsert": "false"
+        },
+
+        body: photoFile
+      }
+    );
+
+
+    if (!uploadResponse.ok) {
+
+      const uploadError =
+        await uploadResponse.text();
+
+      console.error(
+        "Photo upload error:",
+        uploadError
+      );
+
+      alert(
+        "Photo Upload Error:\n\n" +
+        uploadError
+      );
+
+      submitButton.disabled = false;
+      submitButton.innerText =
+        "புகாரை சமர்ப்பிக்கவும்";
+
+      return;
+    }
+
+
+    /*
+      STEP 3
+      Build the public photograph URL.
+    */
+
+  
+    const photoUrl =
+      projectBaseUrl +
+      "/storage/v1/object/public/report-photos/" +
+      encodeURIComponent(photoName);
+
+
+    /*
+      STEP 4
+      Save complaint + photograph URL
+      into the Reports table.
+    */
 
     const response = await fetch(
       SUPABASE_URL + "/Reports",
@@ -381,18 +483,37 @@ async function submitReport() {
 
         headers: {
           "apikey": SUPABASE_KEY,
-          "Authorization": "Bearer " + SUPABASE_KEY,
-          "Content-Type": "application/json",
-          "Prefer": "return=minimal"
+          "Authorization":
+            "Bearer " + SUPABASE_KEY,
+          "Content-Type":
+            "application/json",
+          "Prefer":
+            "return=minimal"
         },
 
         body: JSON.stringify({
-          report_number: reportNumber,
-          issue_type: issueType,
-          description: description,
-          latitude: latitude,
-          longitude: longitude,
-          status: "புதிய புகார்"
+
+          report_number:
+            reportNumber,
+
+          issue_type:
+            issueType,
+
+          description:
+            description,
+
+          latitude:
+            latitude,
+
+          longitude:
+            longitude,
+
+          status:
+            "புதிய புகார்",
+
+          photo_url:
+            photoUrl
+
         })
       }
     );
@@ -400,31 +521,47 @@ async function submitReport() {
 
     if (!response.ok) {
 
-  const errorText = await response.text();
+      const errorText =
+        await response.text();
 
-  console.error("Supabase error:", errorText);
+      console.error(
+        "Supabase error:",
+        errorText
+      );
 
-  alert(
-    "Supabase Error:\n\n" +
-    errorText
-  );
+      alert(
+        "Supabase Error:\n\n" +
+        errorText
+      );
 
-  submitButton.disabled = false;
-  submitButton.innerText = "புகாரை சமர்ப்பிக்கவும்";
+      submitButton.disabled = false;
+      submitButton.innerText =
+        "புகாரை சமர்ப்பிக்கவும்";
 
-  return;
-}
+      return;
+    }
 
 
-    document.getElementById("reportId").innerText =
+    /*
+      STEP 5
+      Show success message.
+    */
+
+    document.getElementById(
+      "reportId"
+    ).innerText =
       reportNumber;
 
 
-    document.getElementById("reportForm").style.display =
+    document.getElementById(
+      "reportForm"
+    ).style.display =
       "none";
 
 
-    document.getElementById("successMessage").style.display =
+    document.getElementById(
+      "successMessage"
+    ).style.display =
       "block";
 
 
@@ -432,20 +569,24 @@ async function submitReport() {
 
   catch (error) {
 
-  console.error("Connection error:", error);
+    console.error(
+      "Connection error:",
+      error
+    );
 
-  alert(
-    "Connection Error:\n\n" +
-    error.message
-  );
+    alert(
+      "Connection Error:\n\n" +
+      error.message
+    );
 
-  submitButton.disabled = false;
-  submitButton.innerText = "புகாரை சமர்ப்பிக்கவும்";
+    submitButton.disabled = false;
+    submitButton.innerText =
+      "புகாரை சமர்ப்பிக்கவும்";
+
+  }
 
 }
-
-}
-
+  
 </script>
   
 </body>

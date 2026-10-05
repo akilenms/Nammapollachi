@@ -188,6 +188,30 @@
 
 </section>
 
+<section class="stats">
+
+  <div class="stat">
+    <h2 id="totalReports">—</h2>
+    <p>மொத்த புகார்கள்</p>
+  </div>
+
+  <div class="stat">
+    <h2 id="totalConfirmations">—</h2>
+    <p>பொதுமக்கள் உறுதிப்படுத்தல்கள்</p>
+  </div>
+
+  <div class="stat">
+    <h2 id="stillThere">—</h2>
+    <p>இன்னும் பிரச்சினை உள்ளது</p>
+  </div>
+
+  <div class="stat">
+    <h2 id="cleaned">—</h2>
+    <p>சுத்தம் செய்யப்பட்டதாக தகவல்</p>
+  </div>
+
+</section>
+  
   <section class="how-it-works">
 
     <h2>இது எப்படி செயல்படும்?</h2>
@@ -263,5 +287,117 @@
 
 </footer>
 
+  <script>
+
+const SUPABASE_API_URL =
+  "https://wseodcdxxhnhshmprwjv.supabase.co/rest/v1";
+
+const SUPABASE_KEY =
+  "sb_publishable_Vz4uj6Mw5m3e8FNu6hcqtQ_Vxn2FszZ";
+
+
+async function loadStatistics() {
+
+  try {
+
+    const reportsResponse = await fetch(
+      SUPABASE_API_URL +
+      "/Reports?select=id",
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization":
+            "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+
+    const confirmationsResponse = await fetch(
+      SUPABASE_API_URL +
+      "/confirmations?select=vote_type",
+      {
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization":
+            "Bearer " + SUPABASE_KEY
+        }
+      }
+    );
+
+
+    if (
+      !reportsResponse.ok ||
+      !confirmationsResponse.ok
+    ) {
+
+      console.error(
+        "Unable to load statistics."
+      );
+
+      return;
+    }
+
+
+    const reports =
+      await reportsResponse.json();
+
+    const confirmations =
+      await confirmationsResponse.json();
+
+
+    const stillThereCount =
+      confirmations.filter(function(item) {
+        return item.vote_type === "still_there";
+      }).length;
+
+
+    const cleanedCount =
+      confirmations.filter(function(item) {
+        return item.vote_type === "cleaned";
+      }).length;
+
+
+    document.getElementById(
+      "totalReports"
+    ).innerText =
+      reports.length;
+
+
+    document.getElementById(
+      "totalConfirmations"
+    ).innerText =
+      confirmations.length;
+
+
+    document.getElementById(
+      "stillThere"
+    ).innerText =
+      stillThereCount;
+
+
+    document.getElementById(
+      "cleaned"
+    ).innerText =
+      cleanedCount;
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Statistics error:",
+      error
+    );
+
+  }
+
+}
+
+
+loadStatistics();
+
+</script>
+  
 </body>
 </html>

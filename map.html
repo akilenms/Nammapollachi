@@ -368,7 +368,14 @@ const cleanedCount =
         { icon: icon }
       )
       .addTo(map)
+        
       .bindPopup(`
+      <div style="
+  max-height:420px;
+  overflow-y:auto;
+  width:240px;
+  padding-right:4px;
+">
         <strong>📍 ${escapeHtml(report.issue_type)}</strong>
 
         <br><br>
@@ -420,7 +427,8 @@ ${report.photo_url ? `
     "
   >
 ` : ""}
-      `);
+</div>
+`);
 
     });
 

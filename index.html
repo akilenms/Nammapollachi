@@ -60,32 +60,45 @@
     }
 
     .stats {
-      display: flex;
-      justify-content: center;
-      gap: 25px;
-      flex-wrap: wrap;
-      padding: 45px 20px;
-    }
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 35px 20px 45px;
 
-    .stat {
-      background: white;
-      width: 180px;
-      padding: 25px;
-      border-radius: 10px;
-      text-align: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
 
-    .stat h2 {
-      margin: 0;
-      color: #176b45;
-      font-size: 32px;
-    }
+   .stat {
+  background: white;
+  min-height: 145px;
+  padding: 22px 12px;
+  border-radius: 12px;
 
-    .stat p {
-      margin-bottom: 0;
-      color: #666;
-    }
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+}
+
+  .stat h2 {
+  margin: 0 0 12px;
+  color: #176b45;
+  font-size: 34px;
+  line-height: 1;
+}
+
+   .stat p {
+  margin: 0;
+  color: #555;
+  font-size: 15px;
+  line-height: 1.6;
+  max-width: 170px;
+}
 
     .how-it-works {
       background: white;
@@ -123,14 +136,35 @@
     }
 
     @media (max-width: 600px) {
-      .hero {
-        padding: 50px 18px;
-      }
 
-      .hero h1 {
-        font-size: 34px;
-      }
-    }
+  .hero {
+    padding: 50px 18px;
+  }
+
+  .hero h1 {
+    font-size: 34px;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 25px 14px 35px;
+  }
+
+  .stat {
+    min-height: 135px;
+    padding: 18px 8px;
+  }
+
+  .stat h2 {
+    font-size: 30px;
+  }
+
+  .stat p {
+    font-size: 14px;
+  }
+
+}
   </style>
 </head>
 
@@ -197,17 +231,17 @@
 
   <div class="stat">
     <h2 id="totalConfirmations">—</h2>
-    <p>பொதுமக்கள் உறுதிப்படுத்தல்கள்</p>
+    <p>பமக்கள் உறுதிப்படுத்தல்கள்</p>
   </div>
 
   <div class="stat">
     <h2 id="stillThere">—</h2>
-    <p>இன்னும் பிரச்சினை உள்ளது</p>
+    <p>இன்னும் உள்ளது என உறுதிப்படுத்தியோர்ு</p>
   </div>
 
   <div class="stat">
     <h2 id="cleaned">—</h2>
-    <p>சுத்தம் செய்யப்பட்டதாக தகவல்</p>
+    <p>சசுத்தம் என உறுதிப்படுத்தியோர்</p>
   </div>
 
 </section>

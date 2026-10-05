@@ -409,6 +409,56 @@ const cleanedCount =
   பேர் சுத்தம் செய்யப்பட்டதாக தெரிவித்துள்ளனர்
 
 </div>
+<br>
+
+<div style="
+  font-weight:bold;
+  margin-bottom:8px;
+">
+  இந்த இடத்தின் தற்போதைய நிலை என்ன?
+</div>
+
+<button
+  onclick="submitConfirmation(${report.id}, 'still_there')"
+  style="
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#fff3e0;
+    border:1px solid #e67e22;
+    color:#9a4d00;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  🗑️ இன்னும் குப்பை உள்ளது
+</button>
+
+<button
+  onclick="submitConfirmation(${report.id}, 'cleaned')"
+  style="
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#eaf7ee;
+    border:1px solid #27ae60;
+    color:#176b45;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  ✅ சுத்தம் செய்யப்பட்டுள்ளது
+</button>
+
+<div
+  id="vote-message-${report.id}"
+  style="
+    font-size:12px;
+    margin-top:5px;
+  "
+></div>
         <br><br>
 
         ${escapeHtml(description)}
@@ -446,7 +496,103 @@ ${report.photo_url ? `
 
 }
 
+async function submitConfirmation(reportId, voteType) {
 
+  const message =
+    document.getElementById(
+      "vote-message-" + reportId
+    );
+
+
+  if (message) {
+    message.innerHTML =
+      "பதிவு செய்யப்படுகிறது...";
+  }
+
+
+  try {
+
+    const response = await fetch(
+      SUPABASE_API_URL + "/confirmations",
+      {
+        method: "POST",
+
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization":
+            "Bearer " + SUPABASE_KEY,
+          "Content-Type":
+            "application/json",
+          "Prefer":
+            "return=minimal"
+        },
+
+        body: JSON.stringify({
+          report_id: reportId,
+          vote_type: voteType
+        })
+      }
+    );
+
+
+    if (!response.ok) {
+
+      const errorText =
+        await response.text();
+
+      console.error(
+        "Confirmation error:",
+        errorText
+      );
+
+      if (message) {
+        message.innerHTML =
+          "❌ பதிவு செய்ய முடியவில்லை.";
+      }
+
+      return;
+    }
+
+
+    if (message) {
+
+      if (voteType === "still_there") {
+
+        message.innerHTML =
+          "✅ உங்கள் உறுதிப்படுத்தல் பதிவு செய்யப்பட்டது.";
+
+      } else {
+
+        message.innerHTML =
+          "✅ சுத்தம் செய்யப்பட்டதாக பதிவு செய்யப்பட்டது.";
+
+      }
+
+    }
+
+
+    setTimeout(function() {
+      location.reload();
+    }, 900);
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Confirmation connection error:",
+      error
+    );
+
+    if (message) {
+      message.innerHTML =
+        "❌ இணைய இணைப்பில் பிரச்சினை ஏற்பட்டது.";
+    }
+
+  }
+
+}
 function escapeHtml(value) {
 
   const div =

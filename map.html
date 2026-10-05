@@ -301,10 +301,41 @@ async function loadReports() {
 
 
     const reports = await response.json();
+// Load community confirmations
+const confirmationResponse = await fetch(
+  SUPABASE_API_URL +
+  "/confirmations?select=report_id,vote_type",
+  {
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + SUPABASE_KEY
+    }
+  }
+);
 
+let confirmations = [];
+
+if (confirmationResponse.ok) {
+  confirmations = await confirmationResponse.json();
+}
 
     reports.forEach(function(report) {
+const reportConfirmations =
+  confirmations.filter(function(item) {
+    return Number(item.report_id) === Number(report.id);
+  });
 
+
+const stillThereCount =
+  reportConfirmations.filter(function(item) {
+    return item.vote_type === "still_there";
+  }).length;
+
+
+const cleanedCount =
+  reportConfirmations.filter(function(item) {
+    return item.vote_type === "cleaned";
+  }).length;
       if (
         report.latitude === null ||
         report.longitude === null
@@ -349,7 +380,28 @@ async function loadReports() {
 
         <strong>நிலை:</strong>
         ${escapeHtml(report.status)}
+<br><br>
 
+<div style="
+  background:#f4f7f5;
+  padding:10px;
+  border-radius:8px;
+  line-height:1.7;
+">
+
+  👥 <strong>
+    ${stillThereCount}
+  </strong>
+  பேர் குப்பை இன்னும் இருப்பதாக தெரிவித்துள்ளனர்
+
+  <br>
+
+  🧹 <strong>
+    ${cleanedCount}
+  </strong>
+  பேர் சுத்தம் செய்யப்பட்டதாக தெரிவித்துள்ளனர்
+
+</div>
         <br><br>
 
         ${escapeHtml(description)}

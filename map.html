@@ -181,9 +181,28 @@
   <div class="legend">
 
     <div class="legend-item">
-      <div class="dot new"></div>
-      புதிய புகார்
-    </div>
+  <div
+    class="dot"
+    style="background:#ffd8a8;">
+  </div>
+  குறைந்த உறுதிப்படுத்தல்
+</div>
+
+<div class="legend-item">
+  <div
+    class="dot"
+    style="background:#e67e22;">
+  </div>
+  அதிக உறுதிப்படுத்தல்
+</div>
+
+<div class="legend-item">
+  <div
+    class="dot"
+    style="background:#8f2500;">
+  </div>
+  மிக அதிக உறுதிப்படுத்தல்
+</div>
 
     <div class="legend-item">
       <div class="dot progress"></div>
@@ -266,9 +285,24 @@ const SUPABASE_KEY =
   }
 
 
-  const orangeIcon = createIcon("#e67e22");
-  const blueIcon = createIcon("#2980b9");
-  const greenIcon = createIcon("#27ae60");
+// Different urgency levels based on community confirmations
+
+const veryLightOrangeIcon = createIcon("#ffd8a8");
+
+const lightOrangeIcon = createIcon("#ffad66");
+
+const orangeIcon = createIcon("#e67e22");
+
+const darkOrangeIcon = createIcon("#c45100");
+
+const veryDarkOrangeIcon = createIcon("#8f2500");
+
+
+// Other report statuses
+
+const blueIcon = createIcon("#2980b9");
+
+const greenIcon = createIcon("#27ae60");
 
 async function loadReports() {
 
@@ -344,7 +378,40 @@ const cleanedCount =
       }
 
 
-      let icon = orangeIcon;
+      let icon;
+
+
+// Community urgency colour
+
+if (stillThereCount === 0) {
+
+  icon = veryLightOrangeIcon;
+
+}
+
+else if (stillThereCount <= 2) {
+
+  icon = lightOrangeIcon;
+
+}
+
+else if (stillThereCount <= 5) {
+
+  icon = orangeIcon;
+
+}
+
+else if (stillThereCount <= 10) {
+
+  icon = darkOrangeIcon;
+
+}
+
+else {
+
+  icon = veryDarkOrangeIcon;
+
+}
 
 
       if (report.status === "நடவடிக்கையில்") {

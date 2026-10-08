@@ -184,16 +184,51 @@
       </select>
 
 
-      <label for="photo">
-        புகைப்படம் சேர்க்கவும்
-      </label>
+      <label>
+  புகைப்படம் சேர்க்கவும்
+</label>
 
-      <input
-        type="file"
-        id="photo"
-        accept="image/*"
-      
-      >
+<p style="font-size:14px; color:#666;">
+  கீழே உள்ள இரண்டு விருப்பங்களில் ஒன்றை தேர்வு செய்யவும்.
+</p>
+
+<label for="cameraPhoto" class="location-button"
+  style="text-align:center; cursor:pointer;">
+  📷 கேமராவில் புகைப்படம் எடுக்கவும்
+</label>
+
+<input
+  type="file"
+  id="cameraPhoto"
+  accept="image/*"
+  capture="environment"
+  style="display:none;"
+  onchange="selectPhoto(this)"
+>
+
+<label for="galleryPhoto" class="location-button"
+  style="text-align:center; cursor:pointer; margin-top:12px;">
+  🖼️ கேலரியில் இருந்து தேர்வு செய்யவும்
+</label>
+
+<input
+  type="file"
+  id="galleryPhoto"
+  accept="image/*"
+  style="display:none;"
+  onchange="selectPhoto(this)"
+>
+
+<p id="photoStatus" style="font-size:14px; color:#176b45;">
+  புகைப்படம் இன்னும் தேர்வு செய்யப்படவில்லை.
+</p>
+
+<input
+  type="file"
+  id="photo"
+  accept="image/*"
+  style="display:none;"
+>
 
 
       <label>
@@ -585,6 +620,24 @@ const uploadResponse = await fetch(
 
   }
 
+}
+
+function selectPhoto(input) {
+
+  if (!input.files || input.files.length === 0) {
+    return;
+  }
+
+  const file = input.files[0];
+
+  const photoInput = document.getElementById("photo");
+
+  const transfer = new DataTransfer();
+  transfer.items.add(file);
+  photoInput.files = transfer.files;
+
+  document.getElementById("photoStatus").textContent =
+    "✅ புகைப்படம் தேர்வு செய்யப்பட்டது: " + file.name;
 }
   
 </script>

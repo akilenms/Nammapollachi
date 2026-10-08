@@ -338,6 +338,138 @@ async function updateStatus(id) {
   }
 }
 
+  
+async function uploadAfterPhoto(id) {
+
+  const photoInput =
+    document.getElementById("after-photo-" + id);
+
+  const button =
+    document.getElementById("upload-after-" + id);
+
+  const result =
+    document.getElementById("upload-result-" + id);
+
+  if (!photoInput.files.length) {
+    result.textContent =
+      "தயவுசெய்து ஒரு புகைப்படத்தை தேர்வு செய்யவும்.";
+    return;
+  }
+
+  const file = photoInput.files[0];
+
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    result.textContent =
+      "JPG, PNG அல்லது WebP புகைப்படத்தை தேர்வு செய்யவும்.";
+    return;
+  }
+
+  if (file.size > 5 * 1024 * 1024) {
+    result.textContent =
+      "புகைப்படம் 5 MB-க்கு குறைவாக இருக்க வேண்டும்.";
+    return;
+  }
+
+  button.disabled = true;
+  result.textContent =
+    "புகைப்படம் பதிவேற்றப்படுகிறது...";
+
+  try {
+
+    const extension = {
+      "image/jpeg": "jpg",
+      "image/png": "png",
+      "image/webp": "webp"
+    }[file.type];
+
+    const filename =
+      "cleanup-" +
+      id + "-" +
+      crypto.randomUUID() +
+      "." + extension;
+
+    // Upload using the authenticated admin session
+    const uploadResponse = await fetch(
+      BASE_URL +
+      "/storage/v1/object/cleanup-photos/" +
+      encodeURIComponent(filename),
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + accessToken,
+          "Content-Type": file.type,
+          "x-upsert": "false"
+        },
+        body: file
+      }
+    );
+
+    if (!uploadResponse.ok) {
+      throw new Error(
+        "Photo upload failed: " +
+        await uploadResponse.text()
+      );
+    }
+
+    const photoUrl =
+      BASE_URL +
+      "/storage/v1/object/public/cleanup-photos/" +
+      encodeURIComponent(filename);
+
+    // Save the photo URL in the Reports table
+    const saveResponse = await apiRequest(
+      "/rest/v1/Reports?id=eq." + id,
+      {
+        method: "PATCH",
+        headers: {
+          "Prefer": "return=representation"
+        },
+        body: JSON.stringify({
+          after_photo_url: photoUrl
+        })
+      }
+    );
+
+    if (!saveResponse.ok) {
+      throw new Error(
+        "Database update failed: " +
+        await saveResponse.text()
+      );
+    }
+
+    const updatedRows = await saveResponse.json();
+
+    if (updatedRows.length !== 1) {
+      throw new Error(
+        "No report was updated."
+      );
+    }
+
+    result.textContent =
+      "✅ சுத்தம் செய்யப்பட்ட புகைப்படம் பதிவேற்றப்பட்டது.";
+
+    await loadReports();
+
+  } catch (error) {
+
+    console.error("Cleanup photo error:", error);
+
+    result.textContent =
+      "❌ புகைப்படத்தை பதிவேற்ற முடியவில்லை.";
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+  
 async function initialize() {
   accessToken =
     sessionStorage.getItem("np_admin_access_token");

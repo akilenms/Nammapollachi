@@ -372,7 +372,7 @@ const cleanedCount =
   }).length;
 
       const isResolved =
-  report.status === "தீர்வு காணப்பட்டது";
+  String(report.status || "").trim().includes("தீர்வு");
       
       if (
         report.latitude === null ||

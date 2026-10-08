@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>நிர்வாகப் பலகை | நம்ம பொள்ளாச்சி</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans Tamil", sans-serif;
+      background: #f4f7f5;
+      color: #1f2937;
+    }
+
+    header {
+      background: #176b45;
+      color: white;
+      padding: 18px 22px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    header h2 { margin: 0; font-size: 20px; }
+
+    .logout {
+      background: white;
+      color: #176b45;
+      border: 0;
+      padding: 10px 14px;
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 0 18px;
+    }
+
+    .notice {
+      padding: 14px;
+      background: #fff7d6;
+      border-radius: 9px;
+      margin-bottom: 20px;
+      line-height: 1.7;
+    }
+
+    #message {
+      padding: 10px 0;
+      line-height: 1.7;
+    }
+
+    .report {
+      background: white;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 18px;
+      box-shadow: 0 2px 10px rgba(0,0,0,.06);
+    }
+
+    .report h3 { color: #176b45; }
+
+    .photo {
+      max-width: 300px;
+      width: 100%;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+
+    .details {
+      line-height: 1.9;
+      overflow-wrap: anywhere;
+    }
+
+    select, button {
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    select {
+      padding: 10px;
+      border: 1px solid #bbb;
+      border-radius: 7px;
+      max-width: 100%;
+    }
+
+    .save {
+      background: #176b45;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 11px 18px;
+      margin-left: 8px;
+      cursor: pointer;
+    }
+
+    .save:disabled { opacity: .6; }
+
+    @media(max-width:600px) {
+      header h2 { font-size: 16px; }
+      .save { margin: 10px 0 0; display: block; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>🌿 நம்ம பொள்ளாச்சி — நிர்வாகம்</h2>
+  <button class="logout" onclick="logout()">
+    வெளியேறு
+  </button>
+</header>
+
+<main>
+  <h2>📋 புகார் நிர்வாகப் பலகை</h2>
+
+  <div class="notice">
+    இது நம்ம பொள்ளாச்சியின் சோதனை நிர்வாகப் பலகை.
+    அதிகாரப்பூர்வ நகராட்சி அமைப்பு அல்ல.
+  </div>
+
+  <p id="message">நிர்வாக அனுமதி சரிபார்க்கப்படுகிறது...</p>
+
+  <div id="reports"></div>
+</main>
+
+<script>
+const BASE_URL =
+  "https://wseodcdxxhnhshmprwjv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_Vz4uj6Mw5m3e8FNu6hcqtQ_Vxn2FszZ";
+
+let accessToken = null;
+
+function logout() {
+  sessionStorage.removeItem("np_admin_access_token");
+  sessionStorage.removeItem("np_admin_refresh_token");
+  window.location.href = "admin.html";
+}
+
+function escapeHtml(value) {
+  const div = document.createElement("div");
+  div.textContent = value == null ? "" : String(value);
+  return div.innerHTML;
+}
+
+async function apiRequest(path, options = {}) {
+  return fetch(BASE_URL + path, {
+    ...options,
+    headers: {
+      "apikey": SUPABASE_KEY,
+      "Authorization": "Bearer " + accessToken,
+      ...(options.body ? {"Content-Type":"application/json"} : {}),
+      ...(options.headers || {})
+    }
+  });
+}
+
+async function checkAdmin() {
+  const response = await apiRequest(
+    "/rest/v1/rpc/is_namma_pollachi_admin",
+    { method: "POST", body: "{}" }
+  );
+
+  if (!response.ok) return false;
+  return (await response.json()) === true;
+}
+
+async function loadReports() {
+  const message = document.getElementById("message");
+  message.textContent = "புகார்கள் ஏற்றப்படுகின்றன...";
+
+  try {
+    const response = await apiRequest(
+      "/rest/v1/Reports?select=id,report_number,issue_type,description,status,photo_url,created_at&order=created_at.desc"
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to load reports: " + response.status);
+    }
+
+    const reports = await response.json();
+    const container = document.getElementById("reports");
+    container.innerHTML = "";
+
+    if (reports.length === 0) {
+      message.textContent = "புகார்கள் எதுவும் இல்லை.";
+      return;
+    }
+
+    message.textContent =
+      reports.length + " புகார்கள் ஏற்றப்பட்டுள்ளன.";
+
+    reports.forEach(report => {
+      const card = document.createElement("div");
+      card.className = "report";
+
+      const id = Number(report.id);
+      const currentStatus = report.status || "புதிய புகார்";
+
+      card.innerHTML = `
+        <h3>${escapeHtml(report.issue_type)}</h3>
+        <div class="details">
+          <strong>புகார் எண்:</strong>
+          ${escapeHtml(report.report_number)}
+          <br>
+          <strong>தற்போதைய நிலை:</strong>
+          ${escapeHtml(currentStatus)}
+          <br>
+          <strong>விவரம்:</strong>
+          ${escapeHtml(report.description || "இல்லை")}
+        </div>
+
+        ${report.photo_url ? `
+          <img class="photo"
+               src="${escapeHtml(report.photo_url)}"
+               alt="புகார் புகைப்படம்">
+        ` : ""}
+
+        <p><strong>நிலையை மாற்றவும்:</strong></p>
+
+        <select id="status-${id}">
+          <option value="புதிய புகார்">புதிய புகார்</option>
+          <option value="நடவடிக்கையில்">நடவடிக்கையில்</option>
+          <option value="தீர்வு காணப்பட்டது">தீர்வு காணப்பட்டது</option>
+        </select>
+
+        <button class="save" id="save-${id}">
+          சேமிக்கவும்
+        </button>
+        <p id="result-${id}" role="status"></p>
+      `;
+
+      container.appendChild(card);
+
+      card.querySelector("select").value = currentStatus;
+
+      card.querySelector(".save").addEventListener(
+        "click",
+        () => updateStatus(id)
+      );
+    });
+
+  } catch (error) {
+    console.error(error);
+    message.textContent =
+      "புகார்களை ஏற்ற முடியவில்லை.";
+  }
+}
+
+async function updateStatus(id) {
+  const select = document.getElementById("status-" + id);
+  const button = document.getElementById("save-" + id);
+  const result = document.getElementById("result-" + id);
+
+  button.disabled = true;
+  result.textContent = "சேமிக்கப்படுகிறது...";
+
+  try {
+    const response = await apiRequest(
+      "/rest/v1/Reports?id=eq." + id,
+      {
+        method: "PATCH",
+        headers: { "Prefer": "return=minimal" },
+        body: JSON.stringify({status: select.value})
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(await response.text());
+    }
+
+    result.textContent = "✅ நிலை புதுப்பிக்கப்பட்டது.";
+    await loadReports();
+
+  } catch (error) {
+    console.error(error);
+    result.textContent = "❌ நிலையை மாற்ற முடியவில்லை.";
+  } finally {
+    button.disabled = false;
+  }
+}
+
+async function initialize() {
+  accessToken =
+    sessionStorage.getItem("np_admin_access_token");
+
+  if (!accessToken) {
+    window.location.replace("admin.html");
+    return;
+  }
+
+  try {
+    if (!(await checkAdmin())) {
+      logout();
+      return;
+    }
+
+    await loadReports();
+
+  } catch (error) {
+    console.error(error);
+    logout();
+  }
+}
+
+initialize();
+</script>
+
+</body>
+</html>

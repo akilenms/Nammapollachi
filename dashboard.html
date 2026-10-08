@@ -231,7 +231,41 @@ async function loadReports() {
                src="${escapeHtml(report.photo_url)}"
                alt="புகார் புகைப்படம்">
         ` : ""}
+<div style="
+  margin-top:20px;
+  padding:15px;
+  background:#f4f7f5;
+  border-radius:10px;
+">
 
+  <strong>📷 சுத்தம் செய்யப்பட்ட புகைப்படம்</strong>
+
+  <p style="font-size:13px; color:#666;">
+    பிரச்சினை தீர்க்கப்பட்ட பிறகு எடுத்த புகைப்படத்தை பதிவேற்றவும்.
+  </p>
+
+  <input
+    type="file"
+    id="after-photo-${id}"
+    accept="image/jpeg,image/png,image/webp"
+    style="
+      width:100%;
+      padding:10px;
+      margin-top:8px;
+    "
+  >
+
+  <button
+    class="save"
+    id="upload-after-${id}"
+    type="button"
+  >
+    📤 புகைப்படத்தை பதிவேற்றவும்
+  </button>
+
+  <p id="upload-result-${id}" role="status"></p>
+
+</div>
         <p><strong>நிலையை மாற்றவும்:</strong></p>
 
         <select id="status-${id}">

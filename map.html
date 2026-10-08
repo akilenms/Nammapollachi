@@ -367,8 +367,6 @@ const stillThereCount =
 
 
 const cleanedCount =
-  const isResolved =
-  report.status === "தீர்வு காணப்பட்டது";
   reportConfirmations.filter(function(item) {
     return item.vote_type === "cleaned";
   }).length;
@@ -438,190 +436,116 @@ else {
       )
       .addTo(map)
         
-      
-.bindPopup(`
-
-  <div style="
-    max-height:420px;
-    overflow-y:auto;
-    width:240px;
-    padding-right:4px;
-    line-height:1.7;
-  ">
-
-    ${report.status === "தீர்வு காணப்பட்டது" ? `
-
-      <strong style="color:#176b45;">
-        ✅ தீர்வு காணப்பட்டது
-      </strong>
-
-      <br><br>
-
-      <strong>புகார் எண்:</strong>
-      ${escapeHtml(report.report_number)}
-
-      <br><br>
-
-      <strong>📍 புகார் இருப்பிடம்:</strong>
-
-      <br>
-
-      <a
-        href="https://www.openstreetmap.org/?mlat=${report.latitude}&mlon=${report.longitude}#map=17/${report.latitude}/${report.longitude}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        வரைபடத்தில் பார்க்க
-      </a>
-
-      <br><br>
-
-      <strong>📷 முன்பு</strong>
-
-      <br>
-
-      ${report.photo_url ? `
-        <img
-          src="${escapeHtml(report.photo_url)}"
-          alt="முன்பு"
-          style="
-            width:220px;
-            max-width:100%;
-            border-radius:8px;
-            margin-top:8px;
-          "
-        >
-      ` : "புகைப்படம் இல்லை"}
-
-      <br><br>
-
-      <strong>📷 பின்பு</strong>
-
-      <br>
-
-      ${
-        report.after_photo_url
-          ? `
-            <img
-              src="${escapeHtml(report.after_photo_url)}"
-              alt="பின்பு"
-              style="
-                width:220px;
-                max-width:100%;
-                border-radius:8px;
-                margin-top:8px;
-              "
-            >
-          `
-          : "சுத்தம் செய்யப்பட்ட புகைப்படம் இன்னும் பதிவேற்றப்படவில்லை."
-      }
-
-    ` : `
-
-      <strong>
-        📍 ${escapeHtml(report.issue_type)}
-      </strong>
-
-      <br><br>
-
-      <strong>புகார் எண்:</strong>
-      ${escapeHtml(report.report_number)}
-
-      <br>
-
-      <strong>நிலை:</strong>
-      ${escapeHtml(report.status)}
-
-      <br><br>
-
+      .bindPopup(`
       <div style="
-        background:#f4f7f5;
-        padding:10px;
-        border-radius:8px;
-      ">
+  max-height:420px;
+  overflow-y:auto;
+  width:240px;
+  padding-right:4px;
+">
+        <strong>📍 ${escapeHtml(report.issue_type)}</strong>
 
-        👥 <strong>${stillThereCount}</strong>
-        பேர் குப்பை இன்னும் இருப்பதாக தெரிவித்துள்ளனர்
+        <br><br>
+
+        <strong>புகார் எண்:</strong>
+        ${escapeHtml(report.report_number)}
 
         <br>
 
-        🧹 <strong>${cleanedCount}</strong>
-        பேர் சுத்தம் செய்யப்பட்டதாக தெரிவித்துள்ளனர்
+        <strong>நிலை:</strong>
+        ${escapeHtml(report.status)}
+<br><br>
 
-      </div>
+<div style="
+  background:#f4f7f5;
+  padding:10px;
+  border-radius:8px;
+  line-height:1.7;
+">
 
-      <br>
+  👥 <strong>
+    ${stillThereCount}
+  </strong>
+  பேர் குப்பை இன்னும் இருப்பதாக தெரிவித்துள்ளனர்
 
-      <strong>
-        இந்த இடத்தின் தற்போதைய நிலை என்ன?
-      </strong>
+  <br>
 
-      <br><br>
+  🧹 <strong>
+    ${cleanedCount}
+  </strong>
+  பேர் சுத்தம் செய்யப்பட்டதாக தெரிவித்துள்ளனர்
 
-      <button
-        onclick="submitConfirmation(${report.id}, 'still_there')"
-        style="
-          width:100%;
-          padding:10px;
-          margin-bottom:8px;
-          background:#fff3e0;
-          border:1px solid #e67e22;
-          color:#9a4d00;
-          border-radius:7px;
-          font-weight:bold;
-          cursor:pointer;
-        "
-      >
-        🗑️ இன்னும் குப்பை உள்ளது
-      </button>
+</div>
+<br>
 
-      <button
-        onclick="submitConfirmation(${report.id}, 'cleaned')"
-        style="
-          width:100%;
-          padding:10px;
-          margin-bottom:8px;
-          background:#eaf7ee;
-          border:1px solid #27ae60;
-          color:#176b45;
-          border-radius:7px;
-          font-weight:bold;
-          cursor:pointer;
-        "
-      >
-        ✅ சுத்தம் செய்யப்பட்டுள்ளது
-      </button>
+<div style="
+  font-weight:bold;
+  margin-bottom:8px;
+">
+  இந்த இடத்தின் தற்போதைய நிலை என்ன?
+</div>
 
-      <div
-        id="vote-message-${report.id}"
-        style="font-size:12px;"
-      ></div>
+<button
+  onclick="submitConfirmation(${report.id}, 'still_there')"
+  style="
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#fff3e0;
+    border:1px solid #e67e22;
+    color:#9a4d00;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  🗑️ இன்னும் குப்பை உள்ளது
+</button>
 
-      <br>
+<button
+  onclick="submitConfirmation(${report.id}, 'cleaned')"
+  style="
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#eaf7ee;
+    border:1px solid #27ae60;
+    color:#176b45;
+    border-radius:7px;
+    font-weight:bold;
+    cursor:pointer;
+  "
+>
+  ✅ சுத்தம் செய்யப்பட்டுள்ளது
+</button>
 
-      ${escapeHtml(description)}
-
-      ${report.photo_url ? `
+<div
+  id="vote-message-${report.id}"
+  style="
+    font-size:12px;
+    margin-top:5px;
+  "
+></div>
         <br><br>
 
-        <img
-          src="${escapeHtml(report.photo_url)}"
-          alt="புகார் புகைப்படம்"
-          style="
-            width:220px;
-            max-width:100%;
-            border-radius:8px;
-            display:block;
-          "
-        >
-      ` : ""}
+        ${escapeHtml(description)}
 
-    `}
+${report.photo_url ? `
+  <br><br>
 
-  </div>
-
+  <img
+    src="${escapeHtml(report.photo_url)}"
+    alt="புகார் புகைப்படம்"
+    style="
+      width:220px;
+      max-width:100%;
+      border-radius:8px;
+      display:block;
+    "
+  >
+` : ""}
+</div>
 `);
-
 
     });
 

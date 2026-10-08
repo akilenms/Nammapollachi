@@ -370,6 +370,10 @@ const cleanedCount =
   reportConfirmations.filter(function(item) {
     return item.vote_type === "cleaned";
   }).length;
+
+      const isResolved =
+  report.status === "தீர்வு காணப்பட்டது";
+      
       if (
         report.latitude === null ||
         report.longitude === null

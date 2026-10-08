@@ -187,7 +187,7 @@ async function loadReports() {
 
   try {
     const response = await apiRequest(
-      "/rest/v1/Reports?select=id,report_number,issue_type,description,status,photo_url,created_at&order=created_at.desc"
+      "/rest/v1/Reports?select=id,report_number,issue_type,description,status,photo_url,after_photo_url,created_at&order=created_at.desc"
     );
 
     if (!response.ok) {
@@ -231,6 +231,26 @@ async function loadReports() {
                src="${escapeHtml(report.photo_url)}"
                alt="புகார் புகைப்படம்">
         ` : ""}
+
+${report.after_photo_url ? `
+  <div style="
+    margin-top:18px;
+    padding:14px;
+    background:#eaf7ee;
+    border-radius:10px;
+  ">
+    <strong>✅ சுத்தம் செய்யப்பட்ட பிறகு</strong>
+
+    <br><br>
+
+    <img
+      class="photo"
+      src="${escapeHtml(report.after_photo_url)}"
+      alt="சுத்தம் செய்யப்பட்ட புகைப்படம்"
+    >
+  </div>
+` : ""}
+
 <div style="
   margin-top:20px;
   padding:15px;

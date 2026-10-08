@@ -288,6 +288,14 @@ async function loadReports() {
         "click",
         () => updateStatus(id)
       );
+
+      card.querySelector(
+  "#upload-after-" + id
+).addEventListener(
+  "click",
+  () => uploadAfterPhoto(id)
+);
+      
     });
 
   } catch (error) {

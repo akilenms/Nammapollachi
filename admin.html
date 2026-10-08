@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+  <title>நிர்வாக உள்நுழைவு | நம்ம பொள்ளாச்சி</title>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Noto Sans Tamil", sans-serif;
+      background: #f4f7f5;
+      color: #1f2937;
+    }
+
+    header {
+      background: #176b45;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header h2 {
+      margin: 0;
+    }
+
+    .container {
+      max-width: 440px;
+      margin: 70px auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      color: #176b45;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 28px;
+      padding: 15px;
+      background: #176b45;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    #message {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 14px;
+      color: #b91c1c;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 35px;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h2>🌿 நம்ம பொள்ளாச்சி</h2>
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <h2>🔐 நிர்வாக உள்நுழைவு</h2>
+
+    <label for="email">மின்னஞ்சல் முகவரி</label>
+    <input
+      type="email"
+      id="email"
+      placeholder="Email address"
+      autocomplete="username"
+    >
+
+    <label for="password">கடவுச்சொல்</label>
+    <input
+      type="password"
+      id="password"
+      placeholder="Password"
+      autocomplete="current-password"
+    >
+
+    <button id="loginButton" onclick="adminLogin()">
+      உள்நுழையவும்
+    </button>
+
+    <p id="message" role="status"></p>
+
+  </div>
+
+  <footer>
+    அங்கீகரிக்கப்பட்ட நிர்வாகிகளுக்கு மட்டும்
+    <br>
+    நம்ம பொள்ளாச்சி — மாதிரி பதிப்பு
+  </footer>
+
+</div>
+
+<script>
+
+const SUPABASE_URL =
+  "https://wseodcdxxhnhshmprwjv.supabase.co";
+
+const SUPABASE_KEY =
+  "sb_publishable_Vz4uj6Mw5m3e8FNu6hcqtQ_Vxn2FszZ";
+
+async function adminLogin() {
+
+  const email =
+    document.getElementById("email").value.trim();
+
+  const password =
+    document.getElementById("password").value;
+
+  const message =
+    document.getElementById("message");
+
+  const button =
+    document.getElementById("loginButton");
+
+  if (!email || !password) {
+    message.textContent =
+      "மின்னஞ்சல் மற்றும் கடவுச்சொல்லை உள்ளிடவும்.";
+    return;
+  }
+
+  button.disabled = true;
+  message.textContent = "சரிபார்க்கப்படுகிறது...";
+
+  try {
+
+    const response = await fetch(
+      SUPABASE_URL + "/auth/v1/token?grant_type=password",
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.access_token) {
+      throw new Error("Login failed");
+    }
+
+    // Verify that this user is an approved administrator.
+    const checkResponse = await fetch(
+      SUPABASE_URL + "/rest/v1/rpc/is_namma_pollachi_admin",
+      {
+        method: "POST",
+        headers: {
+          "apikey": SUPABASE_KEY,
+          "Authorization": "Bearer " + data.access_token,
+          "Content-Type": "application/json"
+        },
+        body: "{}"
+      }
+    );
+
+    if (!checkResponse.ok) {
+      throw new Error("Admin verification failed");
+    }
+
+    const isAdmin = await checkResponse.json();
+
+    if (isAdmin !== true) {
+      throw new Error("Not an approved administrator");
+    }
+
+    // Save the authenticated session for the demo.
+    sessionStorage.setItem(
+      "np_admin_access_token",
+      data.access_token
+    );
+
+    sessionStorage.setItem(
+      "np_admin_refresh_token",
+      data.refresh_token
+    );
+
+    message.style.color = "#176b45";
+    message.textContent =
+      "உள்நுழைவு வெற்றிகரமாக முடிந்தது.";
+
+    // Dashboard will be created in the next step.
+    // For now, remain on this page.
+
+  } catch (error) {
+
+    console.error("Admin login error:", error);
+
+    message.style.color = "#b91c1c";
+    message.textContent =
+      "உள்நுழைய முடியவில்லை. நிர்வாக அனுமதியை சரிபார்க்கவும்.";
+
+  } finally {
+    button.disabled = false;
+  }
+}
+
+</script>
+
+</body>
+</html>

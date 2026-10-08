@@ -459,7 +459,7 @@ else {
         <strong>நிலை:</strong>
         ${escapeHtml(report.status)}
 <br><br>
-
+${!isResolved ? `
 <div style="
   background:#f4f7f5;
   padding:10px;
@@ -530,6 +530,7 @@ else {
     margin-top:5px;
   "
 ></div>
+` : ""}
         <br><br>
 
         ${escapeHtml(description)}

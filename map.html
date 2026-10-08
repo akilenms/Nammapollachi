@@ -310,7 +310,7 @@ async function loadReports() {
 
     const response = await fetch(
       SUPABASE_API_URL +
-      "/Reports?select=id,report_number,issue_type,description,latitude,longitude,status,photo_url,created_at&order=created_at.desc",
+      "/Reports?select=id,report_number,issue_type,description,latitude,longitude,status,photo_url,after_photo_url,created_at&order=created_at.desc",
       {
         headers: {
           "apikey": SUPABASE_KEY,

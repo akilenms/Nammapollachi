@@ -549,6 +549,32 @@ ${report.photo_url ? `
     "
   >
 ` : ""}
+
+${isResolved ? `
+  <br><br>
+
+  <strong>📷 சுத்தம் செய்யப்பட்ட பிறகு</strong>
+
+  <br><br>
+
+  ${report.after_photo_url ? `
+    <img
+      src="${escapeHtml(report.after_photo_url)}"
+      alt="சுத்தம் செய்யப்பட்ட புகைப்படம்"
+      style="
+        width:220px;
+        max-width:100%;
+        border-radius:8px;
+        display:block;
+      "
+    >
+  ` : `
+    <p style="color:#777; font-size:13px;">
+      சுத்தம் செய்யப்பட்ட புகைப்படம் இன்னும் பதிவேற்றப்படவில்லை.
+    </p>
+  `}
+` : ""}
+
 </div>
 `);
 

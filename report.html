@@ -471,9 +471,10 @@ function getLocation() {
       longitude = position.coords.longitude;
 
       status.innerHTML =
-        "✅ இருப்பிடம் வெற்றிகரமாக பதிவு செய்யப்பட்டது.<br>" +
-        "அட்சரேகை: " + latitude.toFixed(5) +
-        "<br>தீர்க்கரேகை: " + longitude.toFixed(5);
+  "✅ Location கிடைத்துவிட்டது!";
+
+status.style.color = "#176b45";
+status.style.fontWeight = "600";
 
     },
 

@@ -150,17 +150,31 @@
     }
 
     .submit-button {
-      width: 100%;
-      margin-top: 28px;
-      padding: 16px;
-      border: none;
-      background: #176b45;
-      color: white;
-      border-radius: 8px;
-      font-size: 18px;
-      font-weight: bold;
-      cursor: pointer;
-    }
+  width: 100%;
+  min-height: 68px;
+  margin-top: 28px;
+  padding: 16px;
+  border: none;
+  background: #176b45;
+  color: white;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  box-shadow: 0 5px 15px rgba(23,107,69,0.18);
+}
+
+.submit-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
 
     .notice {
       margin-top: 20px;
@@ -370,11 +384,13 @@
 
 
       <button
-        class="submit-button"
-        onclick="submitReport()"
-      >
-        புகாரை சமர்ப்பிக்கவும்
-      </button>
+  type="button"
+  class="submit-button"
+  onclick="submitReport()"
+>
+  <span style="font-size:24px;">✅</span>
+  <span>புகார் பதிவு செய்யவும்</span>
+</button>
 
       <div class="notice">
         ℹ️ இது தற்போது ஒரு மாதிரி இணையதளம் மட்டுமே.
@@ -387,32 +403,57 @@
 
     <div id="successMessage">
 
-      <div class="tick">✅</div>
+  <div class="tick">✅</div>
 
-      <h2>புகார் பதிவு செய்யப்பட்டது</h2>
+  <h2>புகார் பதிவு ஆயிடுச்சு!</h2>
 
-      <p>
-        நம்ம பொள்ளாச்சியை தூய்மையாக வைத்திருக்க
-        உதவியதற்கு நன்றி.
-      </p>
+  <p>
+    நம்ம ஊரை சுத்தமாக வைக்க உதவியதற்கு நன்றி!
+  </p>
 
-      <p>
-        <strong>மாதிரி புகார் எண்:</strong>
-        <span id="reportId"></span>
-      </p>
+  <div style="
+    background:#edf7ef;
+    padding:20px;
+    border-radius:12px;
+    margin:22px 0;
+  ">
 
-      <p>
-        முழுமையான பதிப்பில், இந்த புகாரின் நிலையை
-        தீர்வு காணப்படும் வரை நீங்கள் கண்காணிக்க முடியும்.
-      </p>
+    <p style="margin:0 0 8px;">
+      <strong>உங்கள் புகார் எண்</strong>
+    </p>
 
-      <br>
+    <h2 id="reportId" style="
+      font-size:28px;
+      margin:0;
+      color:#176b45;
+    "></h2>
 
-      <a href="index.html">
-        ← முகப்பு பக்கத்திற்கு செல்லவும்
-      </a>
+  </div>
 
-    </div>
+  <p style="font-size:14px; color:#555;">
+    உங்கள் புகாரை Map-ல் பார்க்கலாம்.
+  </p>
+
+  <a href="map.html" style="
+    display:block;
+    background:#176b45;
+    color:white;
+    padding:15px;
+    border-radius:10px;
+    text-decoration:none;
+    margin-top:20px;
+  ">
+    🗺️ Map-ல் பார்க்கவும்
+  </a>
+
+  <a href="index.html" style="
+    display:block;
+    margin-top:20px;
+  ">
+    ← முகப்பு பக்கம்
+  </a>
+
+</div>
 
   </div>
 

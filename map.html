@@ -633,6 +633,75 @@ const map = L.map("map", {
   ).addTo(map);
 
 
+// APPROXIMATE POLLACHI BOUNDARY - DEMO ONLY
+// Visual interpretation of municipal PDF.
+// Not official GPS data. Do not use for ward assignment.
+
+const demoBoundary = [
+  [10.688, 76.985],
+  [10.691, 76.991],
+  [10.687, 76.997],
+  [10.688, 77.010],
+  [10.693, 77.019],
+  [10.688, 77.027],
+  [10.680, 77.041],
+  [10.674, 77.051],
+  [10.666, 77.047],
+  [10.663, 77.036],
+  [10.657, 77.038],
+  [10.650, 77.043],
+  [10.645, 77.034],
+  [10.635, 77.032],
+  [10.633, 77.021],
+  [10.640, 77.015],
+  [10.639, 77.002],
+  [10.645, 76.992],
+  [10.643, 76.980],
+  [10.650, 76.973],
+  [10.659, 76.979],
+  [10.669, 76.977],
+  [10.679, 76.982]
+];
+
+// Draw a green outline around the approximate area.
+const pollachiBoundaryLayer = L.polygon(
+  demoBoundary,
+  {
+    color: "#176b45",
+    weight: 3,
+    opacity: 0.85,
+    fillOpacity: 0,
+    interactive: false
+  }
+).addTo(map);
+
+// Fade the area outside the demo boundary.
+const outerArea = [
+  [10.30, 76.50],
+  [10.30, 77.50],
+  [11.00, 77.50],
+  [11.00, 76.50]
+];
+
+L.polygon(
+  [outerArea, demoBoundary],
+  {
+    color: "transparent",
+    weight: 0,
+    fillColor: "#e8eceb",
+    fillOpacity: 0.65,
+    fillRule: "evenodd",
+    interactive: false
+  }
+).addTo(map);
+
+// Clearly identify the boundary as approximate.
+pollachiBoundaryLayer.bindTooltip(
+  "Approximate Pollachi boundary - Demo only",
+  { sticky: true }
+);
+
+  
   // Marker colours
   function createIcon(color) {
 

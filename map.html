@@ -93,7 +93,45 @@
       overflow: hidden;
       box-shadow: 0 2px 12px rgba(0,0,0,0.12);
     }
+/* Namma Pollachi teal complaint clusters */
 
+.np-cluster {
+  background: rgba(37, 140, 134, 0.20);
+  border-radius: 50%;
+}
+
+.np-cluster div {
+  width: 76%;
+  height: 76%;
+  margin: 12%;
+  border-radius: 50%;
+  background: #258c86;
+  border: 2px solid rgba(255,255,255,0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.18);
+}
+
+.np-cluster.medium {
+  background: rgba(37, 140, 134, 0.24);
+}
+
+.np-cluster.medium div {
+  background: #258c86;
+}
+
+.np-cluster.large {
+  background: rgba(17, 97, 95, 0.28);
+}
+
+.np-cluster.large div {
+  background: #11615f;
+}
     .legend {
       background: white;
       margin-top: 18px;
@@ -322,13 +360,47 @@ const blueIcon = createIcon("#2980b9");
 
 const greenIcon = createIcon("#27ae60");
 
-// Group nearby complaints when zoomed out
+
+// Namma Pollachi - Teal complaint clusters
 const complaintClusters = L.markerClusterGroup({
+
   showCoverageOnHover: false,
   spiderfyOnMaxZoom: true,
   zoomToBoundsOnClick: true,
-  maxClusterRadius: 65
+  maxClusterRadius: 65,
+
+  iconCreateFunction: function(cluster) {
+
+    const count = cluster.getChildCount();
+
+    let size = 42;
+    let level = "";
+    let color = "#63b8ae";
+
+    if (count >= 10) {
+      size = 58;
+      level = "medium";
+      color = "#258c86";
+    }
+
+    if (count >= 30) {
+      size = 74;
+      level = "large";
+      color = "#11615f";
+    }
+
+    return L.divIcon({
+      html: "<div style='background:" + color + ";'>" +
+            count + "</div>",
+      className: "np-cluster " + level,
+      iconSize: L.point(size, size),
+      iconAnchor: L.point(size / 2, size / 2)
+    });
+
+  }
+
 });
+
   
 async function loadReports() {
 

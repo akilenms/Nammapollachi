@@ -322,6 +322,14 @@ const blueIcon = createIcon("#2980b9");
 
 const greenIcon = createIcon("#27ae60");
 
+// Group nearby complaints when zoomed out
+const complaintClusters = L.markerClusterGroup({
+  showCoverageOnHover: false,
+  spiderfyOnMaxZoom: true,
+  zoomToBoundsOnClick: true,
+  maxClusterRadius: 65
+});
+  
 async function loadReports() {
 
   try {
@@ -456,7 +464,7 @@ else {
         [report.latitude, report.longitude],
         { icon: icon }
       )
-      .addTo(map)
+      .addTo(complaintClusters)
         
       .bindPopup(`
       <div style="
@@ -598,7 +606,7 @@ ${isResolved ? `
 
     });
 
-
+map.addLayer(complaintClusters);
   }
 
   catch (error) {

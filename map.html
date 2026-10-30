@@ -5,7 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <title>புகார் வரைபடம் | நம்ம பொள்ளாச்சி</title>
-
+<!-- Tamil font -->
+<link
+  href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+>
   <!-- Leaflet Map -->
   <link
     rel="stylesheet"
@@ -290,6 +294,29 @@
   width: 1px;
   height: 24px;
   background: #dce5df;
+}
+
+/* Namma Pollachi complaint popup typography */
+
+.leaflet-popup-content {
+  font-family: "Noto Sans Tamil", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  color: #25352d;
+}
+
+.leaflet-popup-content strong {
+  font-weight: 700;
+}
+
+.leaflet-popup-content button {
+  font-family: "Noto Sans Tamil", Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.18);
 }
     
     /* Namma Pollachi teal complaint clusters */
@@ -991,14 +1018,43 @@ if (report.status === "நடவடிக்கையில்") {
         
       .bindPopup(`
       <div style="
-  max-height:420px;
+  max-height:min(65dvh, 480px);
   overflow-y:auto;
+  overflow-x:hidden;
   width:240px;
-  padding-right:4px;
+  max-width:100%;
+  padding-right:6px;
+  box-sizing:border-box;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
 ">
-        <strong>📍 ${escapeHtml(report.issue_type)}</strong>
+        <div style="
+  background:#e5f4f1;
+  border-left:4px solid #258c86;
+  border-radius:10px;
+  padding:12px;
+  margin-bottom:14px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+">
 
-        <br><br>
+  <span style="
+    font-size:22px;
+    flex-shrink:0;
+  ">📍</span>
+
+  <span style="
+    font-size:15px;
+    font-weight:700;
+    color:#11615f;
+    line-height:1.6;
+    overflow-wrap:anywhere;
+  ">
+    ${escapeHtml(report.issue_type)}
+  </span>
+
+</div>
 
         <div style="
   background:#f3f8f5;
@@ -1184,12 +1240,35 @@ ${!isResolved ? `
   "
 ></div>
 ` : ""}
-        <br><br>
+        <div style="
+  background:#f4f7f5;
+  border:1px solid #e0e9e3;
+  border-radius:10px;
+  padding:12px;
+  margin:14px 0;
+">
 
-        ${escapeHtml(description)}
+  <div style="
+    font-size:13px;
+    font-weight:700;
+    color:#176b45;
+    margin-bottom:8px;
+  ">
+    📝 கூடுதல் தகவல்
+  </div>
+
+  <div style="
+    font-size:13px;
+    line-height:1.8;
+    color:#37453c;
+    white-space:pre-wrap;
+    overflow-wrap:anywhere;
+  ">${escapeHtml(description)}</div>
+
+</div>
 
 ${report.photo_url ? `
-  <br><br>
+  
 
 ${isResolved ? `
   <div style="
@@ -1238,7 +1317,7 @@ ${isResolved ? `
   ✅ AFTER — சுத்தம் செய்த பிறகு
 </div>
 
-  <br><br>
+  
 
   ${report.after_photo_url ? `
     <img

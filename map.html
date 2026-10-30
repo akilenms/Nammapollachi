@@ -144,6 +144,65 @@
   grid-template-columns: 1fr;
 }
 
+/* Floating information panel */
+
+.info-panel {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1100;
+
+  width: 300px;
+  max-width: calc(100vw - 36px);
+}
+
+.info-panel summary {
+  display: block;
+  width: max-content;
+  margin-left: auto;
+
+  padding: 12px 18px;
+  background: white;
+  color: #176b45;
+
+  border-radius: 12px;
+  font-family: "Noto Sans Tamil", Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+  list-style: none;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+}
+
+.info-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.info-panel summary:focus-visible {
+  outline: 3px solid #176b45;
+  outline-offset: 3px;
+}
+
+.info-content {
+  margin-top: 10px;
+  padding: 18px;
+
+  background: white;
+  border-radius: 12px;
+
+  font-family: "Noto Sans Tamil", Arial, sans-serif;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #33443a;
+
+  box-shadow: 0 4px 18px rgba(0,0,0,0.15);
+}
+
+.info-content p {
+  margin: 12px 0 0;
+}
+    
 /* Floating Report button */
 
 .floating-report-button {
@@ -421,23 +480,26 @@ header a {
 
 <div class="container">
 
-  <div class="title-area">
-    <h1>🗺️ பொள்ளாச்சி புகார் வரைபடம்</h1>
+  
+<details class="info-panel">
+  <summary>ℹ️ தகவல்</summary>
+
+  <div class="info-content">
+    <strong>நம்ம பொள்ளாச்சி — சோதனை பதிப்பு</strong>
 
     <p>
-      பொள்ளாச்சியில் பதிவு செய்யப்பட்ட பிரச்சினைகள் மற்றும்
-      அவற்றின் தற்போதைய நிலையை இந்த வரைபடத்தில் காணலாம்.
+      இது தற்போது ஒரு மாதிரி இணையதளம்.
+      இங்கு உள்ள புகார்கள் சோதனைக்காக
+      பதிவு செய்யப்பட்டிருக்கலாம்.
+    </p>
+
+    <p>
+      புகார்கள் தற்போது பொள்ளாச்சி நகராட்சிக்கு
+      அதிகாரப்பூர்வமாக அனுப்பப்படுவதில்லை.
     </p>
   </div>
-
-  <div class="demo-notice">
-     ℹ️ <strong>சோதனை பதிப்பு:</strong>
-  இந்த இணையதளம் தற்போது சோதனை நிலையில் உள்ளது.
-  இங்கு காட்டப்படும் புகார்கள் பயனர்களால்
-  சோதனைக்காக பதிவு செய்யப்பட்டிருக்கலாம்.
-  இவை தற்போது பொள்ளாச்சி நகராட்சிக்கு
-  அதிகாரப்பூர்வமாக அனுப்பப்படுவதில்லை.
-  </div>
+</details>
+  
 
   <div id="map"></div>
 

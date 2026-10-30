@@ -106,7 +106,43 @@
   z-index: 0;
 }
 
+/* Floating collapsible legend */
 
+.legend-panel {
+  position: fixed;
+  left: 18px;
+  bottom: 28px;
+  z-index: 1100;
+  width: 290px;
+  max-width: calc(100vw - 36px);
+}
+
+.legend-panel summary {
+  display: inline-block;
+  padding: 14px 18px;
+  background: white;
+  color: #176b45;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.16);
+  list-style: none;
+}
+
+.legend-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.legend-panel .legend {
+  position: static;
+  width: 100%;
+  max-width: none;
+  max-height: 40dvh;
+  overflow-y: auto;
+  margin: 0 0 10px;
+  grid-template-columns: 1fr;
+}
 
 /* Floating Report button */
 

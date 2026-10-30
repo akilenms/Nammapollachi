@@ -563,6 +563,21 @@ async function loadReports() {
 
 
     const reports = await response.json();
+
+    // Update floating Active / Reports counters
+
+const totalReports = reports.length;
+
+const activeReports = reports.filter(function(report) {
+  return report.status !== "தீர்வு காணப்பட்டது";
+}).length;
+
+document.getElementById("activeCount").textContent =
+  activeReports;
+
+document.getElementById("reportsCount").textContent =
+  totalReports;
+    
 // Load community confirmations
 const confirmationResponse = await fetch(
   SUPABASE_API_URL +

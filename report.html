@@ -293,32 +293,77 @@
   கீழே உள்ள இரண்டு விருப்பங்களில் ஒன்றை தேர்வு செய்யவும்.
 </p>
 
-<label for="cameraPhoto" class="location-button"
-  style="text-align:center; cursor:pointer;">
-  📷 கேமராவில் புகைப்படம் எடுக்கவும்
-</label>
+<div style="
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  margin-top:12px;
+">
 
-<input
-  type="file"
-  id="cameraPhoto"
-  accept="image/*"
-  capture="environment"
-  style="display:none;"
-  onchange="selectPhoto(this)"
->
+  <label for="cameraPhoto" style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:115px;
+    margin:0;
+    padding:14px 8px;
+    background:#edf7ef;
+    border:2px solid #176b45;
+    border-radius:12px;
+    color:#176b45;
+    text-align:center;
+    cursor:pointer;
+  ">
+    <span style="font-size:34px;">📷</span>
+    <span>Camera</span>
+    <span style="font-size:12px;font-weight:400;">
+      Photo எடுக்கவும்
+    </span>
+  </label>
 
-<label for="galleryPhoto" class="location-button"
-  style="text-align:center; cursor:pointer; margin-top:12px;">
-  🖼️ கேலரியில் இருந்து தேர்வு செய்யவும்
-</label>
+  <input
+    type="file"
+    id="cameraPhoto"
+    accept="image/*"
+    capture="environment"
+    style="display:none;"
+    onchange="selectPhoto(this)"
+  >
 
-<input
-  type="file"
-  id="galleryPhoto"
-  accept="image/*"
-  style="display:none;"
-  onchange="selectPhoto(this)"
->
+  <label for="galleryPhoto" style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:115px;
+    margin:0;
+    padding:14px 8px;
+    background:#f7faf8;
+    border:2px solid #d8e5dc;
+    border-radius:12px;
+    color:#176b45;
+    text-align:center;
+    cursor:pointer;
+  ">
+    <span style="font-size:34px;">🖼️</span>
+    <span>Gallery</span>
+    <span style="font-size:12px;font-weight:400;">
+      Photo தேர்வு செய்யவும்
+    </span>
+  </label>
+
+  <input
+    type="file"
+    id="galleryPhoto"
+    accept="image/*"
+    style="display:none;"
+    onchange="selectPhoto(this)"
+  >
+
+</div>
 
 <p id="photoStatus" style="font-size:14px; color:#176b45;">
   புகைப்படம் இன்னும் தேர்வு செய்யப்படவில்லை.

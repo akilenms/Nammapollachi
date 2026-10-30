@@ -663,14 +663,15 @@ const demoBoundary = [
   [10.679, 76.982]
 ];
 
-// Draw a green outline around the approximate area.
+// Teal boundary and soft interior tint - DEMO ONLY
 const pollachiBoundaryLayer = L.polygon(
   demoBoundary,
   {
-    color: "#176b45",
+    color: "#258C86",
     weight: 3,
-    opacity: 0.85,
-    fillOpacity: 0,
+    opacity: 0.95,
+    fillColor: "#63B8AE",
+    fillOpacity: 0.10,
     interactive: false
   }
 ).addTo(map);

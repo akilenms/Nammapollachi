@@ -133,20 +133,35 @@
   background: #11615f;
 }
     .legend {
-      background: white;
-      margin-top: 18px;
-      padding: 18px;
-      border-radius: 10px;
-      display: flex;
-      gap: 25px;
-      flex-wrap: wrap;
-    }
+  background: white;
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 14px;
 
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+
+  padding: 12px;
+  background: #f5f8f6;
+  border-radius: 10px;
+
+  font-size: 13px;
+  line-height: 1.6;
+  font-weight: 600;
+}
+
+.legend-item .dot {
+  flex-shrink: 0;
+}
 
     .dot {
       width: 14px;
@@ -197,10 +212,32 @@
     }
 
     @media (max-width: 600px) {
-      #map {
-        height: 470px;
-      }
-    }
+
+  #map {
+    height: 470px;
+  }
+
+  .legend {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .legend-item {
+    padding: 10px 8px;
+    font-size: 12px;
+    line-height: 1.5;
+    gap: 7px;
+  }
+
+  .legend-item .dot {
+    width: 12px;
+    height: 12px;
+  }
+
+}
+
+    
   </style>
 </head>
 
@@ -241,7 +278,7 @@
     class="dot"
     style="background:#B7E5DF;">
   </div>
-  👥 குறைவான Confirm
+  குறைவான Confirm
 </div>
 
 <div class="legend-item">
@@ -249,7 +286,7 @@
     class="dot"
     style="background:#258C86;">
   </div>
-  👥 அதிக Confirm
+  அதிக Confirm
 </div>
 
 <div class="legend-item">
@@ -257,17 +294,17 @@
     class="dot"
     style="background:#11615F;">
   </div>
-  👥 ரொம்ப அதிக Confirm
+  ரொம்ப அதிக Confirm
 </div>
 
     <div class="legend-item">
       <div class="dot progress"></div>
-      நடவடிக்கையில்
+      வேலை நடக்குது
     </div>
 
     <div class="legend-item">
       <div class="dot resolved"></div>
-      தீர்வு காணப்பட்டது
+      சரி செய்யப்பட்டது
     </div>
 
   </div>
@@ -323,22 +360,36 @@ const SUPABASE_KEY =
   // Marker colours
   function createIcon(color) {
 
-    return L.divIcon({
-      className: "",
-      html:
+  return L.divIcon({
+    className: "",
+
+    html:
+      '<div style="' +
+      'width:46px;' +
+      'height:46px;' +
+      'border-radius:50%;' +
+      'background:' + color + '33;' +
+      'display:flex;' +
+      'align-items:center;' +
+      'justify-content:center;' +
+      '">' +
+
         '<div style="' +
-        'background:' + color + ';' +
         'width:22px;' +
         'height:22px;' +
+        'background:' + color + ';' +
         'border-radius:50%;' +
         'border:3px solid white;' +
-        'box-shadow:0 1px 5px rgba(0,0,0,.5);' +
-        '"></div>',
-      iconSize: [22,22],
-      iconAnchor: [11,11]
-    });
+        'box-shadow:0 2px 6px rgba(0,0,0,.25);' +
+        '"></div>' +
 
-  }
+      '</div>',
+
+    iconSize: [46,46],
+    iconAnchor: [23,23]
+  });
+
+}
 
 
 // Teal shades based on community confirmations

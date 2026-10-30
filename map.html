@@ -106,6 +106,58 @@
   z-index: 0;
 }
 
+/* Floating Active / Reports counter */
+
+.map-counter {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+
+  background: white;
+  padding: 12px 24px;
+  border-radius: 40px;
+
+  box-shadow: 0 4px 18px rgba(0,0,0,0.16);
+  white-space: nowrap;
+}
+
+.counter-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.counter-item strong {
+  font-family: Arial, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #176b45;
+}
+
+.counter-item:first-child strong {
+  color: #e67e22;
+}
+
+.counter-item span {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  color: #68777a;
+}
+
+.counter-divider {
+  width: 1px;
+  height: 24px;
+  background: #dce5df;
+}
+    
     /* Namma Pollachi teal complaint clusters */
 
 .np-cluster {
@@ -282,6 +334,22 @@
 
   <div id="map"></div>
 
+<div class="map-counter" aria-label="Complaint statistics">
+
+  <div class="counter-item">
+    <strong id="activeCount">—</strong>
+    <span>Active</span>
+  </div>
+
+  <div class="counter-divider"></div>
+
+  <div class="counter-item">
+    <strong id="reportsCount">—</strong>
+    <span>Reports</span>
+  </div>
+
+</div>
+  
   <div class="legend">
 
    <div class="legend-item">

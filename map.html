@@ -122,7 +122,7 @@
 
   background: white;
   padding: 12px 24px;
-  border-radius: 40px;
+  border-radius: 12px;
 
   box-shadow: 0 4px 18px rgba(0,0,0,0.16);
   white-space: nowrap;
@@ -278,7 +278,39 @@
 
     @media (max-width: 600px) {
 
-  
+  /* Mobile floating header */
+
+header {
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  padding: 10px 16px;
+  text-align: center;
+}
+
+header a {
+  font-size: 15px;
+}
+
+/* Mobile Active / Reports counter */
+
+.map-counter {
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 9px 18px;
+  gap: 14px;
+}
+
+.counter-item strong {
+  font-size: 19px;
+}
+
+.counter-item span {
+  font-size: 11px;
+}
 
   .legend {
     grid-template-columns: repeat(2, minmax(0, 1fr));

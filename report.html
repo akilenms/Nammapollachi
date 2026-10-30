@@ -220,15 +220,47 @@
         என்ன பிரச்சினை?
       </label>
 
-      <select id="issueType">
-        <option value="">பிரச்சினையை தேர்வு செய்யவும்</option>
-        <option>சாலையில் கொட்டப்பட்ட குப்பை</option>
-        <option>நிரம்பி வழியும் குப்பைத்தொட்டி</option>
-        <option>குப்பை சேகரிக்கப்படவில்லை</option>
-        <option>கட்டுமானக் கழிவுகள்</option>
-        <option>அடைப்பு / அசுத்தமான வடிகால்</option>
-        <option>மற்ற சுகாதார பிரச்சினை</option>
-      </select>
+      <input type="hidden" id="issueType" value="">
+
+<div class="issue-grid">
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'சாலையில் கொட்டப்பட்ட குப்பை')">
+    <span class="issue-icon">🗑️</span>
+    ரோட்டில் குப்பை
+  </button>
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'நிரம்பி வழியும் குப்பைத்தொட்டி')">
+    <span class="issue-icon">🚮</span>
+    குப்பைத்தொட்டி நிரம்பியது
+  </button>
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'குப்பை சேகரிக்கப்படவில்லை')">
+    <span class="issue-icon">🚛</span>
+    குப்பை எடுக்கவில்லை
+  </button>
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'கட்டுமானக் கழிவுகள்')">
+    <span class="issue-icon">🧱</span>
+    கட்டுமானக் கழிவுகள்
+  </button>
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'அடைப்பு / அசுத்தமான வடிகால்')">
+    <span class="issue-icon">💧</span>
+    சாக்கடை அடைப்பு
+  </button>
+
+  <button type="button" class="issue-option"
+    onclick="selectIssue(this, 'மற்ற சுகாதார பிரச்சினை')">
+    <span class="issue-icon">❓</span>
+    மற்ற பிரச்சினை
+  </button>
+
+</div>
 
 
       <label>
@@ -371,6 +403,21 @@ let latitude = null;
 let longitude = null;
 
 
+function selectIssue(button, issueValue) {
+
+  document.getElementById("issueType").value = issueValue;
+
+  document.querySelectorAll(".issue-option").forEach(function(option) {
+    option.classList.remove("selected");
+    option.setAttribute("aria-pressed", "false");
+  });
+
+  button.classList.add("selected");
+  button.setAttribute("aria-pressed", "true");
+
+}
+  
+  
 function getLocation() {
 
   const status = document.getElementById("locationStatus");

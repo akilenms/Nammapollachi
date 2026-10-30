@@ -971,7 +971,18 @@ else {
           ? report.description
           : "கூடுதல் விவரம் இல்லை";
 
+// Simple status labels for the public popup
+// Original database values remain unchanged.
 
+let displayStatus = report.status;
+
+if (report.status === "தீர்வு காணப்பட்டது") {
+  displayStatus = "சரி செய்யப்பட்டது";
+}
+
+if (report.status === "நடவடிக்கையில்") {
+  displayStatus = "வேலை நடக்குது";
+}
       L.marker(
         [report.latitude, report.longitude],
         { icon: icon }
@@ -995,7 +1006,7 @@ else {
         <br>
 
         <strong>நிலை:</strong>
-        ${escapeHtml(report.status)}
+        ${escapeHtml(displayStatus)}
 <br><br>
 ${!isResolved ? `
 <div style="

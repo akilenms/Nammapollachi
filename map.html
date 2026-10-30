@@ -296,6 +296,47 @@
   background: #dce5df;
 }
 
+/* Larger popup close button for mobile */
+
+.leaflet-popup-close-button {
+  width: 34px !important;
+  height: 34px !important;
+  font-size: 26px !important;
+  line-height: 30px !important;
+  font-weight: 700 !important;
+  color: #176b45 !important;
+  background: white !important;
+  border-radius: 50%;
+  text-align: center;
+  z-index: 10;
+}
+
+.leaflet-popup-close-button:hover {
+  background: #e5f4f1 !important;
+  color: #11615f !important;
+}    
+
+/* Wider complaint popup - desktop and mobile */
+
+.leaflet-popup-content-wrapper {
+  max-width: calc(100vw - 24px);
+}
+
+.leaflet-popup-content {
+  width: 340px !important;
+  max-width: calc(100vw - 64px);
+  margin: 16px 14px;
+}
+
+/* Mobile popup width */
+
+@media (max-width: 600px) {
+  .leaflet-popup-content {
+    width: min(340px, calc(100vw - 64px)) !important;
+    max-width: calc(100vw - 64px);
+  }
+}
+    
 /* Namma Pollachi complaint popup typography */
 
 .leaflet-popup-content {
@@ -1021,7 +1062,8 @@ if (report.status === "நடவடிக்கையில்") {
   max-height:min(65dvh, 480px);
   overflow-y:auto;
   overflow-x:hidden;
-  width:240px;
+  width:100%;
+min-width:0;
   max-width:100%;
   padding-right:6px;
   box-sizing:border-box;

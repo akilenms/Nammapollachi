@@ -296,14 +296,20 @@
   background: #dce5df;
 }
 
-    /* Keep complaint popups above all floating buttons */
+    /* Place floating controls below an open complaint popup */
 
-.leaflet-popup-pane {
-  z-index: 2000 !important;
+#map:has(.leaflet-popup) {
+  z-index: 1200 !important;
 }
 
-.leaflet-popup {
-  z-index: 2001 !important;
+#map:has(.leaflet-popup) ~ .floating-report-button,
+body:has(.leaflet-popup) header,
+body:has(.leaflet-popup) .map-counter,
+body:has(.leaflet-popup) .info-panel,
+body:has(.leaflet-popup) .legend-panel,
+body:has(.leaflet-popup) .floating-report-button,
+body:has(.leaflet-popup) #myLocationButton {
+  visibility: hidden;
 }
 
     /* Larger popup close button for mobile */

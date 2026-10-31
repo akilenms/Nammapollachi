@@ -206,7 +206,44 @@
 .info-content p {
   margin: 12px 0 0;
 }
-    
+ 
+/* Ward filter */
+
+.ward-filter {
+  position: fixed;
+  left: 18px;
+  top: 100px;
+  z-index: 1100;
+  max-width: calc(100vw - 36px);
+}
+
+.ward-filter select {
+  background: white;
+  color: #11615f;
+  border: 1px solid #dcebe6;
+  border-radius: 12px;
+  padding: 12px;
+  font-family: "Noto Sans Tamil", Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  cursor: pointer;
+  max-width: 100%;
+}
+
+@media (max-width: 600px) {
+  .ward-filter {
+    top: 128px;
+    left: 12px;
+    max-width: calc(100vw - 110px);
+  }
+
+  .ward-filter select {
+    font-size: 12px;
+    padding: 10px 8px;
+  }
+}
+   
 /* Floating Report button */
 
 .floating-report-button {
@@ -357,6 +394,24 @@ body:has(.leaflet-popup) #myLocationButton {
     width: min(340px, calc(100vw - 64px)) !important;
     max-width: calc(100vw - 64px);
   }
+}
+
+/* Mobile complaint popup scrolling */
+
+@media (max-width: 600px) {
+
+  .leaflet-popup-content > div {
+    max-height: 58dvh !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .leaflet-popup-content-wrapper {
+    max-width: calc(100vw - 24px);
+  }
+
 }
     
 /* Namma Pollachi complaint popup typography */
@@ -641,6 +696,18 @@ header a {
   
 
   <div id="map"></div>
+  
+<!-- Ward Filter - Demo -->
+<div class="ward-filter">
+  <select
+    id="wardFilter"
+    onchange="filterWardComplaints()"
+    aria-label="வார்டு தேர்வு"
+  >
+    <option value="all">📍 எல்லா வார்டுகளும்</option>
+  </select>
+</div>
+
 <!-- My Location button -->
 <button
   type="button"
@@ -1118,6 +1185,55 @@ const complaintClusters = L.markerClusterGroup({
 });
 
   
+/* Ward filter functionality - DEMO ONLY */
+
+// Keep a reference to all complaint markers.
+let allComplaintMarkers = [];
+
+// Add Ward 1 to Ward 36 to the dropdown.
+const wardFilterSelect = document.getElementById("wardFilter");
+
+for (let wardNumber = 1; wardNumber <= 36; wardNumber++) {
+  const option = document.createElement("option");
+
+  option.value = String(wardNumber);
+  option.textContent = "Ward " + wardNumber;
+
+  wardFilterSelect.appendChild(option);
+}
+
+// Show only complaint markers belonging to the selected ward.
+function filterWardComplaints() {
+
+  const selectedWard = wardFilterSelect.value;
+
+  // Remove the currently displayed complaint markers.
+  complaintClusters.clearLayers();
+
+  // Restore all complaints.
+  if (selectedWard === "all") {
+    complaintClusters.addLayers(allComplaintMarkers);
+    return;
+  }
+
+  // Filter using the approximate ward boundaries.
+  const matchingMarkers = allComplaintMarkers.filter(function(marker) {
+
+    const location = marker.getLatLng();
+
+    const wardNumber = findWardByLocation(
+      location.lat,
+      location.lng
+    );
+
+    return String(wardNumber) === selectedWard;
+
+  });
+
+  complaintClusters.addLayers(matchingMarkers);
+
+}
+
 async function loadReports() {
 
   try {
@@ -1622,8 +1738,8 @@ ${isResolved ? `
   `}
 ` : ""}
 
-<!-- Know Your Ward - Demo Information -->
-<div style="
+<!-- Know Your Ward - Collapsible Demo Information -->
+<details style="
   margin-top:20px;
   padding:14px 10px;
   border:1px solid #dcebe6;
@@ -1631,15 +1747,18 @@ ${isResolved ? `
   background:#ffffff;
 ">
 
-  <div style="
+  <summary style="
     font-size:15px;
     font-weight:700;
     color:#11615f;
-    margin-bottom:12px;
-    text-align:center;
+    cursor:pointer;
+    padding:4px;
+    line-height:1.8;
   ">
     🏛️ உங்கள் வார்டு விவரம்
-  </div>
+  </summary>
+
+  <div style="margin-top:14px;">
 
   <div style="
     background:#e5f4f1;
@@ -1758,12 +1877,28 @@ ${isResolved ? `
 அதிகாரிகள் விவரம் மாதிரி தகவல் மட்டுமே.
   </div>
 
-</div>
+  </div>
+
+ </div>
+</details>
 
 </div>
-`);
+`, {
+  autoPan: true,
+  keepInView: true,
+  autoPanPaddingTopLeft: L.point(20, 155),
+  autoPanPaddingBottomRight: L.point(20, 110),
+  maxWidth: 380,
+  minWidth: 260
+});
 
-    });
+        });
+
+// Save all the loaded complaint markers.
+allComplaintMarkers = complaintClusters.getLayers();
+
+// Display the markers according to the selected ward.
+filterWardComplaints();
 
 map.addLayer(complaintClusters);
   }

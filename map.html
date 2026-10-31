@@ -841,6 +841,63 @@ pollachiBoundaryLayer.bindTooltip(
   { sticky: true }
 );
 
+/* Pollachi 36 Ward Boundaries - UNVERIFIED DEMO */
+
+fetch("./pollachi_36_wards_DRAFT_UNVERIFIED.geojson")
+  .then(function(response) {
+    if (!response.ok) {
+      throw new Error("Ward GeoJSON not found");
+    }
+    return response.json();
+  })
+  .then(function(data) {
+
+    const wardLayer = L.geoJSON(data, {
+
+      style: function() {
+        return {
+          color: "#258C86",
+          weight: 2,
+          opacity: 0.9,
+          fillColor: "#63B8AE",
+          fillOpacity: 0.12
+        };
+      },
+
+      onEachFeature: function(feature, layer) {
+
+        const ward = feature.properties.ward_no;
+
+        layer.bindPopup(
+          "<div style='font-family:Arial;text-align:center;padding:10px;'>" +
+          "<strong style='font-size:18px;color:#11615F;'>Ward " +
+          ward +
+          "</strong><br>" +
+          "<span style='font-size:12px;color:#777;'>" +
+          "Approximate boundary - Demo only" +
+          "</span></div>"
+        );
+
+        layer.bindTooltip("Ward " + ward, {
+          sticky: true
+        });
+
+      }
+
+    }).addTo(map);
+
+    wardLayer.bringToBack();
+
+    console.log(
+      "Pollachi ward boundaries loaded:",
+      data.features.length
+    );
+
+  })
+  .catch(function(error) {
+    console.error("Ward boundary loading error:", error);
+  });
+
 
 /* My Location - GPS feature */
 

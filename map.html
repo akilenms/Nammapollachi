@@ -296,7 +296,17 @@
   background: #dce5df;
 }
 
-/* Larger popup close button for mobile */
+    /* Keep complaint popups above all floating buttons */
+
+.leaflet-popup-pane {
+  z-index: 2000 !important;
+}
+
+.leaflet-popup {
+  z-index: 2001 !important;
+}
+
+    /* Larger popup close button for mobile */
 
 .leaflet-popup-close-button {
   width: 34px !important;
@@ -619,7 +629,34 @@ header a {
   
 
   <div id="map"></div>
-
+<!-- My Location button -->
+<button
+  type="button"
+  id="myLocationButton"
+  onclick="showMyLocation()"
+  aria-label="என் இருப்பிடத்தை வரைபடத்தில் காண்பி"
+  title="என் இருப்பிடம்"
+  style="
+    position:fixed;
+    right:24px;
+    bottom:105px;
+    z-index:1100;
+    width:52px;
+    height:52px;
+    border:none;
+    border-radius:14px;
+    background:white;
+    color:#11615f;
+    font-size:25px;
+    cursor:pointer;
+    box-shadow:0 4px 16px rgba(0,0,0,0.22);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  "
+>
+  📍
+</button>
 <a
   href="report.html"
   class="floating-report-button"
@@ -797,6 +834,96 @@ pollachiBoundaryLayer.bindTooltip(
   "Approximate Pollachi boundary - Demo only",
   { sticky: true }
 );
+
+
+/* My Location - GPS feature */
+
+let myLocationMarker = null;
+let myLocationAccuracyCircle = null;
+
+function showMyLocation() {
+
+  const button = document.getElementById("myLocationButton");
+
+  if (!navigator.geolocation) {
+    alert("உங்கள் Browser-ல் Location வசதி இல்லை.");
+    return;
+  }
+
+  if (button) {
+    button.disabled = true;
+    button.style.opacity = "0.6";
+  }
+
+  navigator.geolocation.getCurrentPosition(
+
+    function(position) {
+
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+      const accuracy = position.coords.accuracy;
+
+      // Remove the previous location markers
+      if (myLocationMarker) {
+        map.removeLayer(myLocationMarker);
+      }
+
+      if (myLocationAccuracyCircle) {
+        map.removeLayer(myLocationAccuracyCircle);
+      }
+
+      // Blue location dot
+      myLocationMarker = L.circleMarker([lat, lng], {
+        radius: 9,
+        color: "#ffffff",
+        weight: 3,
+        fillColor: "#2580e8",
+        fillOpacity: 1
+      }).addTo(map);
+
+      // GPS accuracy area
+      myLocationAccuracyCircle = L.circle([lat, lng], {
+        radius: accuracy,
+        color: "#2580e8",
+        weight: 1,
+        fillColor: "#2580e8",
+        fillOpacity: 0.12,
+        interactive: false
+      }).addTo(map);
+
+      // Move the map to the user's location
+      map.setView([lat, lng], 16);
+
+      if (button) {
+        button.disabled = false;
+        button.style.opacity = "1";
+      }
+
+    },
+
+    function(error) {
+
+      if (error.code === 1) {
+        alert("Location Permission கொடுக்கவும்.");
+      } else {
+        alert("உங்கள் Location கிடைக்கவில்லை. GPS மற்றும் Internet இணைப்பை சரிபார்க்கவும்.");
+      }
+
+      if (button) {
+        button.disabled = false;
+        button.style.opacity = "1";
+      }
+
+    },
+
+    {
+      enableHighAccuracy: true,
+      timeout: 15000,
+      maximumAge: 0
+    }
+
+  );
+}
 
   
   // Marker colours

@@ -243,7 +243,87 @@
     padding: 10px 8px;
   }
 }
-   
+
+
+/* Ward-wise complaint statistics */
+
+.ward-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-top: 8px;
+  padding: 10px 8px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+}
+
+.ward-stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ward-stat-item strong {
+  font-family: Arial, sans-serif;
+  font-size: 20px;
+  color: #11615f;
+}
+
+.ward-stat-item span {
+  font-size: 10px;
+  color: #66776b;
+  text-align: center;
+}
+
+.ward-stat-item:nth-child(2) strong {
+  color: #e67e22;
+}
+
+.ward-stat-item:nth-child(3) strong {
+  color: #7854b8;
+}
+
+.ward-stats-note {
+  margin-top: 5px;
+  padding: 4px;
+  background: rgba(255,255,255,0.92);
+  color: #66776b;
+  font-size: 9px;
+  text-align: center;
+  border-radius: 5px;
+}
+
+/* Ward filter width */
+
+.ward-filter {
+  width: 240px;
+}
+
+@media (max-width: 600px) {
+  .ward-filter {
+    width: 200px;
+    max-width: calc(100vw - 110px);
+  }
+
+  .ward-stats {
+    padding: 7px 5px;
+    gap: 4px;
+  }
+
+  .ward-stat-item strong {
+    font-size: 17px;
+  }
+
+  .ward-stat-item span {
+    font-size: 9px;
+  }
+}
+
+
+    
 /* Floating Report button */
 
 .floating-report-button {
@@ -697,8 +777,10 @@ header a {
 
   <div id="map"></div>
   
-<!-- Ward Filter - Demo -->
+
+<!-- Ward Filter and Statistics - Demo -->
 <div class="ward-filter">
+
   <select
     id="wardFilter"
     onchange="filterWardComplaints()"
@@ -706,7 +788,32 @@ header a {
   >
     <option value="all">Ward No.</option>
   </select>
+
+  <div class="ward-stats">
+
+    <div class="ward-stat-item">
+      <strong id="wardTotal">0</strong>
+      <span>Total</span>
+    </div>
+
+    <div class="ward-stat-item">
+      <strong id="wardActive">0</strong>
+      <span>Active</span>
+    </div>
+
+    <div class="ward-stat-item">
+      <strong id="wardResolved">0</strong>
+      <span>Resolved</span>
+    </div>
+
+  </div>
+
+  <div class="ward-stats-note">
+    Approximate ward data · Demo
+  </div>
+
 </div>
+
 
 <!-- My Location button -->
 <button
@@ -1190,6 +1297,9 @@ const complaintClusters = L.markerClusterGroup({
 // Keep a reference to all complaint markers.
 let allComplaintMarkers = [];
 
+// Store reports for ward-wise statistics.
+let allReportsData = [];
+
 // Add Ward 1 to Ward 36 to the dropdown.
 const wardFilterSelect = document.getElementById("wardFilter");
 
@@ -1203,20 +1313,55 @@ for (let wardNumber = 1; wardNumber <= 36; wardNumber++) {
 }
 
 // Show only complaint markers belonging to the selected ward.
+
 function filterWardComplaints() {
 
   const selectedWard = wardFilterSelect.value;
 
-  // Remove the currently displayed complaint markers.
+  // Find complaints belonging to the selected ward.
+  const matchingReports = allReportsData.filter(function(report) {
+
+    // Show all complaints when Ward No. is selected.
+    if (selectedWard === "all") {
+      return true;
+    }
+
+    if (report.latitude == null || report.longitude == null) {
+      return false;
+    }
+
+    const wardNumber = findWardByLocation(
+      Number(report.latitude),
+      Number(report.longitude)
+    );
+
+    return wardNumber !== null &&
+      String(wardNumber) === selectedWard;
+
+  });
+
+  // Calculate complaint statistics.
+  const total = matchingReports.length;
+
+  const resolved = matchingReports.filter(function(report) {
+    return report.status === "தீர்வு காணப்பட்டது";
+  }).length;
+
+  const active = total - resolved;
+
+  // Update the statistics display.
+  document.getElementById("wardTotal").textContent = total;
+  document.getElementById("wardActive").textContent = active;
+  document.getElementById("wardResolved").textContent = resolved;
+
+  // Refresh complaint markers.
   complaintClusters.clearLayers();
 
-  // Restore all complaints.
   if (selectedWard === "all") {
     complaintClusters.addLayers(allComplaintMarkers);
     return;
   }
 
-  // Filter using the approximate ward boundaries.
   const matchingMarkers = allComplaintMarkers.filter(function(marker) {
 
     const location = marker.getLatLng();
@@ -1226,13 +1371,15 @@ function filterWardComplaints() {
       location.lng
     );
 
-    return String(wardNumber) === selectedWard;
+    return wardNumber !== null &&
+      String(wardNumber) === selectedWard;
 
   });
 
   complaintClusters.addLayers(matchingMarkers);
 
 }
+
 
 async function loadReports() {
 
@@ -1266,7 +1413,10 @@ async function loadReports() {
 
     const reports = await response.json();
 
-    // Update floating Active / Reports counters
+// Store reports for ward-wise statistics.
+allReportsData = reports;
+
+// Update floating Active / Reports counters
 
 const totalReports = reports.length;
 
